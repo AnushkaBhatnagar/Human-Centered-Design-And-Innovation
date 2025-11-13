@@ -1,0 +1,58 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "api/**/*.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/api/$1"
+    },
+    {
+      "src": "/prototype1-aspire/(.*)",
+      "dest": "/prototype1-aspire/$1"
+    },
+    {
+      "src": "/prototype1-aspire",
+      "dest": "/prototype1-aspire/index.html"
+    },
+    {
+      "src": "/prototype2-wardrobe/(.*)",
+      "dest": "/prototype2-wardrobe/$1"
+    },
+    {
+      "src": "/prototype2-wardrobe",
+      "dest": "/prototype2-wardrobe/index.html"
+    },
+    {
+      "src": "/prototype3-thrift/(.*)",
+      "dest": "/prototype3-thrift/$1"
+    },
+    {
+      "src": "/prototype3-thrift",
+      "dest": "/prototype3-thrift/index.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        },
+        {
+          "key": "Access-Control-Allow-Methods",
+          "value": "GET, POST, PUT, DELETE, OPTIONS"
+        },
+        {
+          "key": "Access-Control-Allow-Headers",
+          "value": "Content-Type, Authorization"
+        }
+      ]
+    }
+  ]
+}

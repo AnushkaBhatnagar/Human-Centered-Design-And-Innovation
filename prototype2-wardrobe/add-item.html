@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Item - Wardrobe</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .upload-area {
+            border: 2px dashed var(--border-color);
+            border-radius: var(--radius-xl);
+            padding: var(--spacing-2xl);
+            text-align: center;
+            background: var(--bg-tertiary);
+            cursor: pointer;
+            transition: all var(--transition-base);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .upload-area:hover {
+            border-color: var(--accent-primary);
+            background: var(--bg-secondary);
+        }
+
+        .upload-area.drag-over {
+            border-color: var(--accent-primary);
+            background: #f0f0ff;
+        }
+
+        .upload-area input[type="file"] {
+            display: none;
+        }
+
+        .upload-icon {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto var(--spacing-lg);
+            color: var(--text-tertiary);
+        }
+
+        .upload-preview {
+            display: none;
+            margin-top: var(--spacing-lg);
+        }
+
+        .upload-preview.active {
+            display: block;
+        }
+
+        .preview-image {
+            max-width: 100%;
+            max-height: 400px;
+            border-radius: var(--radius-lg);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .form-section {
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: var(--spacing-sm);
+            color: var(--text-primary);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: var(--spacing-sm) var(--spacing-md);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            font-size: 1rem;
+            transition: all var(--transition-base);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        .tag-selector {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--spacing-sm);
+            margin-top: var(--spacing-sm);
+        }
+
+        .tag-option {
+            padding: var(--spacing-sm) var(--spacing-md);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-full);
+            background: var(--bg-secondary);
+            cursor: pointer;
+            transition: all var(--transition-base);
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .tag-option:hover {
+            background: var(--bg-tertiary);
+        }
+
+        .tag-option.selected {
+            background: var(--accent-primary);
+            color: white;
+            border-color: var(--accent-primary);
+        }
+
+        .form-actions {
+            display: flex;
+            gap: var(--spacing-md);
+            justify-content: flex-end;
+            margin-top: var(--spacing-2xl);
+        }
+
+        .tab-buttons {
+            display: flex;
+            gap: var(--spacing-sm);
+            margin-bottom: var(--spacing-xl);
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .tab-button {
+            padding: var(--spacing-md) var(--spacing-xl);
+            background: none;
+            border: none;
+            border-bottom: 2px solid transparent;
+            font-weight: 600;
+            cursor: pointer;
+            color: var(--text-secondary);
+            transition: all var(--transition-base);
+            margin-bottom: -2px;
+        }
+
+        .tab-button:hover {
+            color: var(--text-primary);
+        }
+
+        .tab-button.active {
+            color: var(--accent-primary);
+            border-bottom-color: var(--accent-primary);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .ai-analysis {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: var(--spacing-lg);
+            border-radius: var(--radius-lg);
+            margin-top: var(--spacing-lg);
+        }
+
+        .ai-analysis h4 {
+            margin-bottom: var(--spacing-sm);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        .color-picker {
+            display: flex;
+            gap: var(--spacing-sm);
+            margin-top: var(--spacing-sm);
+        }
+
+        .color-option {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            border: 3px solid transparent;
+            transition: all var(--transition-base);
+        }
+
+        .color-option:hover {
+            transform: scale(1.1);
+        }
+
+        .color-option.selected {
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 2px white, 0 0 0 4px var(--accent-primary);
+        }
+    </style>
+</head>
+<body>
+    <nav class="sidebar">
+        <div class="logo">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                <path d="M16 4L4 10V22L16 28L28 22V10L16 4Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                <path d="M16 16L4 10M16 16L28 10M16 16V28" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+            </svg>
+            <span>Wardrobe</span>
+        </div>
+        <ul class="nav-links">
+            <li>
+                <a href="index.html">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <rect x="3" y="3" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5"/>
+                        <rect x="11" y="3" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5"/>
+                        <rect x="3" y="11" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5"/>
+                        <rect x="11" y="11" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5"/>
+                    </svg>
+                    Dashboard
+                </a>
+            </li>
+            <li>
+                <a href="closet.html">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <rect x="3" y="2" width="14" height="16" rx="1" stroke="currentColor" stroke-width="1.5"/>
+                        <path d="M10 2V18M6 6H8M12 6H14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                    </svg>
+                    My Closet
+                </a>
+            </li>
+            <li class="active">
+                <a href="add-item.html">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <circle cx="10" cy="10" r="7" stroke="currentColor" stroke-width="1.5"/>
+                        <path d="M10 7V13M7 10H13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                    </svg>
+                    Add Item
+                </a>
+            </li>
+            <li>
+                <a href="analytics.html">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path d="M3 14L7 10L11 14L17 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        <circle cx="7" cy="10" r="1.5" fill="currentColor"/>
+                        <circle cx="11" cy="14" r="1.5" fill="currentColor"/>
+                        <circle cx="17" cy="8" r="1.5" fill="currentColor"/>
+                    </svg>
+                    Analytics
+                </a>
+            </li>
+            <li>
+                <a href="recommendations.html">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path d="M10 3L12 8L17 8.5L13.5 12L14.5 17L10 14.5L5.5 17L6.5 12L3 8.5L8 8L10 3Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+                    </svg>
+                    Outfit Ideas
+                </a>
+            </li>
+            <li>
+                <a href="shopping.html">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path d="M6 6L4 2H16L14 6M6 6H14M6 6L5 18H15L14 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    Shopping
+                </a>
+            </li>
+        </ul>
+        <div style="margin-top: auto; padding-top: 2rem; border-top: 1px solid var(--border-color);">
+            <button onclick="handleLogout()" style="display: flex; align-items: center; gap: 0.75rem; width: 100%; padding: 0.75rem 1rem; background: none; border: none; color: #ef4444; font-weight: 500; border-radius: 0.5rem; cursor: pointer; transition: all 0.2s; text-align: left;">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M7 17H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3"/>
+                    <polyline points="13 14 17 10 13 6"/>
+                    <line x1="17" y1="10" x2="7" y2="10"/>
+                </svg>
+                Logout
+            </button>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <header class="page-header">
+            <div>
+                <h1>Add to Wardrobe</h1>
+                <p class="subtitle">Upload photos and tag your clothes</p>
+            </div>
+        </header>
+
+        <div class="card">
+            <div class="tab-buttons">
+                <button class="tab-button active" data-tab="outfit">Log Today's Outfit</button>
+                <button class="tab-button" data-tab="item">Add Single Item</button>
+            </div>
+
+            <div id="outfitTab" class="tab-content active">
+                <form id="outfitForm">
+                    <div class="form-section">
+                        <label class="form-label">Upload Photo</label>
+                        <div class="upload-area" id="outfitUpload">
+                            <input type="file" id="outfitFile" accept="image/*">
+                            <svg class="upload-icon" viewBox="0 0 64 64" fill="none">
+                                <rect x="8" y="16" width="48" height="40" rx="4" stroke="currentColor" stroke-width="2"/>
+                                <circle cx="32" cy="32" r="8" stroke="currentColor" stroke-width="2"/>
+                                <circle cx="48" cy="24" r="2" fill="currentColor"/>
+                            </svg>
+                            <p style="font-weight: 600; margin-bottom: 0.5rem;">Click or drag to upload</p>
+                            <p style="color: var(--text-tertiary); font-size: 0.875rem;">PNG, JPG up to 10MB</p>
+                        </div>
+                        <div class="upload-preview" id="outfitPreview">
+                            <img id="outfitPreviewImg" class="preview-image" alt="Preview">
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <label class="form-label">How are you feeling?</label>
+                        <div class="tag-selector" id="emotionTags">
+                            <div class="tag-option" data-tag="happy">😊 Happy</div>
+                            <div class="tag-option" data-tag="confident">💪 Confident</div>
+                            <div class="tag-option" data-tag="relaxed">😌 Relaxed</div>
+                            <div class="tag-option" data-tag="professional">💼 Professional</div>
+                            <div class="tag-option" data-tag="creative">🎨 Creative</div>
+                            <div class="tag-option" data-tag="romantic">💕 Romantic</div>
+                            <div class="tag-option" data-tag="edgy">⚡ Edgy</div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <label class="form-label">What's the occasion?</label>
+                        <div class="tag-selector" id="purposeTags">
+                            <div class="tag-option" data-tag="work">💼 Work</div>
+                            <div class="tag-option" data-tag="casual">👕 Casual</div>
+                            <div class="tag-option" data-tag="date">💝 Date</div>
+                            <div class="tag-option" data-tag="workout">🏋️ Workout</div>
+                            <div class="tag-option" data-tag="formal">🎩 Formal</div>
+                            <div class="tag-option" data-tag="party">🎉 Party</div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <label class="form-label">Notes (optional)</label>
+                        <textarea id="outfitNotes" class="form-input" rows="3" placeholder="Add any notes about this outfit..."></textarea>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" onclick="window.location.href='index.html'">Cancel</button>
+                        <button type="submit" class="btn-primary">Save Outfit</button>
+                    </div>
+                </form>
+            </div>
+
+            <div id="itemTab" class="tab-content">
+                <form id="itemForm">
+                    <div class="form-section">
+                        <label class="form-label">Upload Photo</label>
+                        <div class="upload-area" id="itemUpload">
+                            <input type="file" id="itemFile" accept="image/*">
+                            <svg class="upload-icon" viewBox="0 0 64 64" fill="none">
+                                <rect x="8" y="16" width="48" height="40" rx="4" stroke="currentColor" stroke-width="2"/>
+                                <circle cx="32" cy="32" r="8" stroke="currentColor" stroke-width="2"/>
+                                <circle cx="48" cy="24" r="2" fill="currentColor"/>
+                            </svg>
+                            <p style="font-weight: 600; margin-bottom: 0.5rem;">Click or drag to upload</p>
+                            <p style="color: var(--text-tertiary); font-size: 0.875rem;">PNG, JPG up to 10MB</p>
+                        </div>
+                        <div class="upload-preview" id="itemPreview">
+                            <img id="itemPreviewImg" class="preview-image" alt="Preview">
+                            <button type="button" class="btn-secondary" id="analyzeBtn" style="display: none;">
+                                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" style="margin-right: 0.5rem;">
+                                    <path d="M10 3L12 8L17 8.5L13.5 12L14.5 17L10 14.5L5.5 17L6.5 12L3 8.5L8 8L10 3Z" stroke="currentColor" stroke-width="1.5"/>
+                                </svg>
+                                Analyze with AI
+                            </button>
+                            <div id="aiAnalysis"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <label class="form-label">Item Name</label>
+                        <input type="text" id="itemName" class="form-input" placeholder="e.g., Blue Denim Jacket" required>
+                    </div>
+
+                    <div class="form-section">
+                        <label class="form-label">Type</label>
+                        <select id="itemType" class="form-input">
+                            <option value="top">Top</option>
+                            <option value="bottom">Bottom</option>
+                            <option value="dress">Dress</option>
+                            <option value="outerwear">Outerwear</option>
+                            <option value="shoes">Shoes</option>
+                            <option value="accessory">Accessory</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-section">
+                        <label class="form-label">Primary Color</label>
+                        <div class="color-picker" id="colorPicker">
+                            <div class="color-option" data-color="#000000" style="background: #000000;"></div>
+                            <div class="color-option" data-color="#FFFFFF" style="background: #FFFFFF; border: 1px solid #e0e0e0;"></div>
+                            <div class="color-option" data-color="#FF0000" style="background: #FF0000;"></div>
+                            <div class="color-option" data-color="#0000FF" style="background: #0000FF;"></div>
+                            <div class="color-option" data-color="#00FF00" style="background: #00FF00;"></div>
+                            <div class="color-option" data-color="#FFFF00" style="background: #FFFF00;"></div>
+                            <div class="color-option" data-color="#FFA500" style="background: #FFA500;"></div>
+                            <div class="color-option" data-color="#800080" style="background: #800080;"></div>
+                            <div class="color-option" data-color="#FFC0CB" style="background: #FFC0CB;"></div>
+                            <div class="color-option" data-color="#A52A2A" style="background: #A52A2A;"></div>
+                        </div>
+                        <input type="hidden" id="itemColor" value="#000000">
+                    </div>
+
+                    <div class="form-section">
+                        <label class="form-label">Season</label>
+                        <div class="tag-selector" id="seasonTags">
+                            <div class="tag-option" data-tag="spring">🌸 Spring</div>
+                            <div class="tag-option" data-tag="summer">☀️ Summer</div>
+                            <div class="tag-option" data-tag="fall">🍂 Fall</div>
+                            <div class="tag-option" data-tag="winter">❄️ Winter</div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" onclick="window.location.href='index.html'">Cancel</button>
+                        <button type="submit" class="btn-primary">Add to Closet</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/storage.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/anthropic.js"></script>
+    <script src="js/add-item.js"></script>
+    <script>
+        function handleLogout() {
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('wardrobe_user_name');
+                localStorage.removeItem('wardrobe_desktop_onboarding_completed');
+                window.location.href = 'index.html';
+            }
+        }
+    </script>
+</body>
+</html>

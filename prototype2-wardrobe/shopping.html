@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping - Wardrobe</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .shopping-intro {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            border-radius: var(--radius-xl);
+            padding: var(--spacing-2xl);
+            color: white;
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .shopping-intro h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .shopping-intro p {
+            margin-bottom: var(--spacing-lg);
+            opacity: 0.95;
+        }
+
+        .suggestions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: var(--spacing-xl);
+        }
+
+        .suggestion-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            transition: all var(--transition-base);
+        }
+
+        .suggestion-card:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-2px);
+        }
+
+        .suggestion-image {
+            width: 100%;
+            height: 200px;
+            background: var(--bg-tertiary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            color: var(--text-tertiary);
+        }
+
+        .suggestion-content {
+            padding: var(--spacing-xl);
+        }
+
+        .suggestion-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .suggestion-name {
+            font-size: 1.125rem;
+            font-weight: 700;
+            flex: 1;
+        }
+
+        .price-badge {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            color: white;
+            padding: 0.375rem 0.75rem;
+            border-radius: var(--radius-full);
+            font-weight: 600;
+            font-size: 0.875rem;
+            white-space: nowrap;
+        }
+
+        .suggestion-description {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            line-height: 1.6;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .reasoning-box {
+            background: var(--bg-tertiary);
+            padding: var(--spacing-md);
+            border-radius: var(--radius-md);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .reasoning-box strong {
+            color: var(--text-primary);
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .reasoning-box p {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            line-height: 1.5;
+        }
+
+        .styling-ideas {
+            margin-top: var(--spacing-md);
+        }
+
+        .styling-ideas strong {
+            display: block;
+            margin-bottom: var(--spacing-sm);
+            font-size: 0.875rem;
+        }
+
+        .styling-ideas ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .styling-ideas li {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            padding-left: 1.25rem;
+            position: relative;
+            margin-bottom: 0.25rem;
+        }
+
+        .styling-ideas li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: var(--accent-primary);
+            font-weight: 700;
+        }
+
+        .gap-analysis {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-xl);
+            padding: var(--spacing-xl);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .gap-analysis h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .gaps-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--spacing-sm);
+        }
+
+        .gap-tag {
+            padding: var(--spacing-sm) var(--spacing-md);
+            background: var(--bg-tertiary);
+            border-radius: var(--radius-full);
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+    </style>
+</head>
+<body>
+    <nav class="sidebar">
+        <div class="logo">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                <path d="M16 4L4 10V22L16 28L28 22V10L16 4Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                <path d="M16 16L4 10M16 16L28 10M16 16V28" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+            </svg>
+            <span>Wardrobe</span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="index.html"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="3" y="3" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="11" y="3" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="3" y="11" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="11" y="11" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5"/></svg>Dashboard</a></li>
+            <li><a href="closet.html"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="3" y="2" width="14" height="16" rx="1" stroke="currentColor" stroke-width="1.5"/><path d="M10 2V18M6 6H8M12 6H14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>My Closet</a></li>
+            <li><a href="add-item.html"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="7" stroke="currentColor" stroke-width="1.5"/><path d="M10 7V13M7 10H13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>Add Item</a></li>
+            <li><a href="analytics.html"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 14L7 10L11 14L17 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="7" cy="10" r="1.5" fill="currentColor"/><circle cx="11" cy="14" r="1.5" fill="currentColor"/><circle cx="17" cy="8" r="1.5" fill="currentColor"/></svg>Analytics</a></li>
+            <li><a href="recommendations.html"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 3L12 8L17 8.5L13.5 12L14.5 17L10 14.5L5.5 17L6.5 12L3 8.5L8 8L10 3Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>Outfit Ideas</a></li>
+            <li class="active"><a href="shopping.html"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M6 6L4 2H16L14 6M6 6H14M6 6L5 18H15L14 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Shopping</a></li>
+        </ul>
+        <div style="margin-top: auto; padding-top: 2rem; border-top: 1px solid var(--border-color);">
+            <button onclick="handleLogout()" style="display: flex; align-items: center; gap: 0.75rem; width: 100%; padding: 0.75rem 1rem; background: none; border: none; color: #ef4444; font-weight: 500; border-radius: 0.5rem; cursor: pointer; transition: all 0.2s; text-align: left;">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M7 17H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3"/>
+                    <polyline points="13 14 17 10 13 6"/>
+                    <line x1="17" y1="10" x2="7" y2="10"/>
+                </svg>
+                Logout
+            </button>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <header class="page-header">
+            <div>
+                <h1>Shopping Suggestions</h1>
+                <p class="subtitle">Smart recommendations to complete your wardrobe</p>
+            </div>
+        </header>
+
+        <div class="shopping-intro">
+            <h2>Build a Versatile Wardrobe</h2>
+            <p>Based on your current wardrobe and style patterns, we've identified key pieces that would maximize your outfit options.</p>
+            <button class="btn-primary" id="generateSuggestionsBtn" style="background: white; color: var(--accent-primary);">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" style="margin-right: 0.5rem;">
+                    <path d="M10 3L12 8L17 8.5L13.5 12L14.5 17L10 14.5L5.5 17L6.5 12L3 8.5L8 8L10 3Z" fill="currentColor"/>
+                </svg>
+                Get Personalized Suggestions
+            </button>
+        </div>
+
+        <div id="gapAnalysisContainer"></div>
+
+        <div id="suggestionsContainer" class="suggestions-grid"></div>
+    </main>
+
+    <script src="js/storage.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/anthropic.js"></script>
+    <script>
+        function handleLogout() {
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('wardrobe_user_name');
+                localStorage.removeItem('wardrobe_desktop_onboarding_completed');
+                window.location.href = 'index.html';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('generateSuggestionsBtn').addEventListener('click', generateSuggestions);
+        });
+
+        async function generateSuggestions() {
+            const items = Storage.getItems();
+            const analytics = Storage.getAnalytics('all');
+
+            const btn = document.getElementById('generateSuggestionsBtn');
+            const gapContainer = document.getElementById('gapAnalysisContainer');
+            const suggestionsContainer = document.getElementById('suggestionsContainer');
+
+            App.showLoading(btn);
+            suggestionsContainer.innerHTML = `
+                <div class="loading-state" style="grid-column: 1 / -1;">
+                    <div class="loading-spinner"></div>
+                    <p>Analyzing your wardrobe and generating suggestions...</p>
+                </div>
+            `;
+
+            try {
+                // Identify gaps
+                const gaps = identifyWardrobeGaps(items);
+                displayGapAnalysis(gaps, gapContainer);
+
+                // Get AI suggestions
+                const suggestions = await OpenAI.getShoppingSuggestions(
+                    gaps,
+                    'versatile and modern',
+                    'moderate'
+                );
+
+                displaySuggestions(suggestions);
+            } catch (error) {
+                console.error('Error generating suggestions:', error);
+                App.showToast('Error generating suggestions', 'error');
+                suggestionsContainer.innerHTML = '';
+            } finally {
+                App.showLoading(btn, false);
+            }
+        }
+
+        function identifyWardrobeGaps(items) {
+            const gaps = [];
+            const types = {};
+
+            items.forEach(item => {
+                types[item.type] = (types[item.type] || 0) + 1;
+            });
+
+            // Check for missing basics
+            if (!types.top || types.top < 3) gaps.push('basic tops');
+            if (!types.bottom || types.bottom < 2) gaps.push('bottoms');
+            if (!types.outerwear) gaps.push('outerwear');
+            if (!types.shoes || types.shoes < 2) gaps.push('versatile shoes');
+            if (!types.dress) gaps.push('dress pieces');
+            if (!types.accessory) gaps.push('accessories');
+
+            // Check color variety
+            const colors = new Set(items.map(item => item.color));
+            if (colors.size < 5) gaps.push('color variety');
+
+            return gaps.length > 0 ? gaps : ['versatile basics'];
+        }
+
+        function displayGapAnalysis(gaps, container) {
+            container.innerHTML = `
+                <div class="gap-analysis">
+                    <h3>Wardrobe Gaps Identified</h3>
+                    <p style="color: var(--text-secondary); margin-bottom: 1rem;">These items would significantly increase your outfit versatility:</p>
+                    <div class="gaps-list">
+                        ${gaps.map(gap => `<span class="gap-tag">${gap}</span>`).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function displaySuggestions(suggestions) {
+            const container = document.getElementById('suggestionsContainer');
+
+            if (!suggestions || suggestions.length === 0) {
+                container.innerHTML = `
+                    <div style="grid-column: 1 / -1; text-align: center; padding: 2rem; color: var(--text-tertiary);">
+                        <p>Could not generate suggestions. Try adding more items to your wardrobe first.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const icons = ['👕', '👖', '👗', '🧥', '👟', '👜', '🕶️'];
+
+            container.innerHTML = suggestions.map((item, index) => `
+                <div class="suggestion-card">
+                    <div class="suggestion-image">
+                        ${icons[index % icons.length]}
+                    </div>
+                    <div class="suggestion-content">
+                        <div class="suggestion-header">
+                            <h3 class="suggestion-name">${item.name}</h3>
+                            <span class="price-badge">${item.priceRange}</span>
+                        </div>
+                        <p class="suggestion-description">${item.description}</p>
+                        <div class="reasoning-box">
+                            <strong>Why this item?</strong>
+                            <p>${item.reasoning}</p>
+                        </div>
+                        ${item.stylingIdeas && item.stylingIdeas.length > 0 ? `
+                            <div class="styling-ideas">
+                                <strong>Styling Ideas:</strong>
+                                <ul>
+                                    ${item.stylingIdeas.map(idea => `<li>${idea}</li>`).join('')}
+                                </ul>
+                            </div>
+                        ` : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+    </script>
+</body>
+</html>

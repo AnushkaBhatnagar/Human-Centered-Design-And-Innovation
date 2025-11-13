@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Outfit Ideas - Wardrobe</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .mood-selector {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: var(--radius-xl);
+            padding: var(--spacing-2xl);
+            color: white;
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .mood-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .mood-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: var(--spacing-md);
+        }
+
+        .mood-option {
+            padding: var(--spacing-lg);
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid transparent;
+            border-radius: var(--radius-lg);
+            text-align: center;
+            cursor: pointer;
+            transition: all var(--transition-base);
+            backdrop-filter: blur(10px);
+        }
+
+        .mood-option:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .mood-option.selected {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: white;
+        }
+
+        .mood-icon {
+            font-size: 2rem;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .mood-label {
+            font-weight: 600;
+        }
+
+        .recommendations-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: var(--spacing-xl);
+        }
+
+        .recommendation-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-xl);
+            padding: var(--spacing-xl);
+            transition: all var(--transition-base);
+        }
+
+        .recommendation-card:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-2px);
+        }
+
+        .outfit-preview {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--spacing-sm);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .outfit-item-mini {
+            aspect-ratio: 1;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+        }
+
+        .outfit-item-mini img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .outfit-item-placeholder {
+            background: var(--bg-tertiary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-tertiary);
+            font-size: 2rem;
+        }
+
+        .recommendation-content h3 {
+            font-size: 1.125rem;
+            font-weight: 700;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .recommendation-reasoning {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            line-height: 1.6;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .styling-tips {
+            background: var(--bg-tertiary);
+            padding: var(--spacing-md);
+            border-radius: var(--radius-md);
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .styling-tips strong {
+            color: var(--text-primary);
+        }
+
+        .generate-btn {
+            width: 100%;
+            margin-top: var(--spacing-md);
+        }
+
+        .loading-state {
+            text-align: center;
+            padding: var(--spacing-2xl);
+            color: var(--text-tertiary);
+        }
+
+        .loading-spinner {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto var(--spacing-lg);
+            border: 4px solid var(--bg-tertiary);
+            border-top-color: var(--accent-primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <nav class="sidebar">
+        <div class="logo">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                <path d="M16 4L4 10V22L16 28L28 22V10L16 4Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                <path d="M16 16L4 10M16 16L28 10M16 16V28" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+            </svg>
+            <span>Wardrobe</span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="index.html"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="3" y="3" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="11" y="3" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="3" y="11" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="11" y="11" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5"/></svg>Dashboard</a></li>
+            <li><a href="closet.html"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="3" y="2" width="14" height="16" rx="1" stroke="currentColor" stroke-width="1.5"/><path d="M10 2V18M6 6H8M12 6H14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>My Closet</a></li>
+            <li><a href="add-item.html"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="7" stroke="currentColor" stroke-width="1.5"/><path d="M10 7V13M7 10H13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>Add Item</a></li>
+            <li><a href="analytics.html"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 14L7 10L11 14L17 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="7" cy="10" r="1.5" fill="currentColor"/><circle cx="11" cy="14" r="1.5" fill="currentColor"/><circle cx="17" cy="8" r="1.5" fill="currentColor"/></svg>Analytics</a></li>
+            <li class="active"><a href="recommendations.html"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 3L12 8L17 8.5L13.5 12L14.5 17L10 14.5L5.5 17L6.5 12L3 8.5L8 8L10 3Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>Outfit Ideas</a></li>
+            <li><a href="shopping.html"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M6 6L4 2H16L14 6M6 6H14M6 6L5 18H15L14 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Shopping</a></li>
+        </ul>
+        <div style="margin-top: auto; padding-top: 2rem; border-top: 1px solid var(--border-color);">
+            <button onclick="handleLogout()" style="display: flex; align-items: center; gap: 0.75rem; width: 100%; padding: 0.75rem 1rem; background: none; border: none; color: #ef4444; font-weight: 500; border-radius: 0.5rem; cursor: pointer; transition: all 0.2s; text-align: left;">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M7 17H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3"/>
+                    <polyline points="13 14 17 10 13 6"/>
+                    <line x1="17" y1="10" x2="7" y2="10"/>
+                </svg>
+                Logout
+            </button>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <header class="page-header">
+            <div>
+                <h1>Outfit Ideas</h1>
+                <p class="subtitle">Get personalized outfit recommendations</p>
+            </div>
+        </header>
+
+        <div class="mood-selector">
+            <h2 class="mood-title">How are you feeling today?</h2>
+            <div class="mood-grid">
+                <div class="mood-option" data-mood="confident">
+                    <div class="mood-icon">💪</div>
+                    <div class="mood-label">Confident</div>
+                </div>
+                <div class="mood-option" data-mood="relaxed">
+                    <div class="mood-icon">😌</div>
+                    <div class="mood-label">Relaxed</div>
+                </div>
+                <div class="mood-option" data-mood="professional">
+                    <div class="mood-icon">💼</div>
+                    <div class="mood-label">Professional</div>
+                </div>
+                <div class="mood-option" data-mood="creative">
+                    <div class="mood-icon">🎨</div>
+                    <div class="mood-label">Creative</div>
+                </div>
+                <div class="mood-option" data-mood="romantic">
+                    <div class="mood-icon">💕</div>
+                    <div class="mood-label">Romantic</div>
+                </div>
+                <div class="mood-option" data-mood="energetic">
+                    <div class="mood-icon">⚡</div>
+                    <div class="mood-label">Energetic</div>
+                </div>
+            </div>
+            <button class="btn-primary generate-btn" id="generateBtn" style="background: white; color: var(--accent-primary);">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" style="margin-right: 0.5rem;">
+                    <path d="M10 3L12 8L17 8.5L13.5 12L14.5 17L10 14.5L5.5 17L6.5 12L3 8.5L8 8L10 3Z" fill="currentColor"/>
+                </svg>
+                Generate Outfit Ideas
+            </button>
+        </div>
+
+        <div id="recommendationsContainer" class="recommendations-section"></div>
+    </main>
+
+    <script src="js/storage.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/anthropic.js"></script>
+    <script>
+        function handleLogout() {
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('wardrobe_user_name');
+                localStorage.removeItem('wardrobe_desktop_onboarding_completed');
+                window.location.href = 'index.html';
+            }
+        }
+
+        let selectedMood = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeMoodSelector();
+        });
+
+        function initializeMoodSelector() {
+            document.querySelectorAll('.mood-option').forEach(option => {
+                option.addEventListener('click', () => {
+                    document.querySelectorAll('.mood-option').forEach(o => o.classList.remove('selected'));
+                    option.classList.add('selected');
+                    selectedMood = option.dataset.mood;
+                });
+            });
+
+            document.getElementById('generateBtn').addEventListener('click', generateRecommendations);
+        }
+
+        async function generateRecommendations() {
+            if (!selectedMood) {
+                App.showToast('Please select a mood first', 'error');
+                return;
+            }
+
+            const items = Storage.getItems();
+            if (items.length < 3) {
+                App.showToast('Add more items to your wardrobe to get recommendations', 'error');
+                return;
+            }
+
+            const container = document.getElementById('recommendationsContainer');
+            const btn = document.getElementById('generateBtn');
+
+            // Show loading
+            container.innerHTML = `
+                <div class="loading-state" style="grid-column: 1 / -1;">
+                    <div class="loading-spinner"></div>
+                    <p>Creating personalized outfits for your ${selectedMood} mood...</p>
+                </div>
+            `;
+            App.showLoading(btn);
+
+            try {
+                // Use OpenAI for recommendations
+                const recommendations = await OpenAI.getOutfitRecommendations(
+                    selectedMood,
+                    'everyday',
+                    items
+                );
+
+                displayRecommendations(recommendations, items);
+            } catch (error) {
+                console.error('Error generating recommendations:', error);
+                App.showToast('Error generating recommendations', 'error');
+                container.innerHTML = '';
+            } finally {
+                App.showLoading(btn, false);
+            }
+        }
+
+        function displayRecommendations(recommendations, allItems) {
+            const container = document.getElementById('recommendationsContainer');
+
+            if (!recommendations || recommendations.length === 0) {
+                container.innerHTML = `
+                    <div style="grid-column: 1 / -1; text-align: center; padding: 2rem; color: var(--text-tertiary);">
+                        <p>Could not generate recommendations. Try adding more items to your wardrobe.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = recommendations.map((rec, index) => {
+                // Find actual items from wardrobe
+                const outfitItems = rec.items.map(itemName => 
+                    allItems.find(item => 
+                        item.name.toLowerCase().includes(itemName.toLowerCase()) ||
+                        itemName.toLowerCase().includes(item.name.toLowerCase())
+                    )
+                ).filter(Boolean);
+
+                // Fill remaining slots with random items if needed
+                while (outfitItems.length < 3 && allItems.length > outfitItems.length) {
+                    const randomItem = allItems[Math.floor(Math.random() * allItems.length)];
+                    if (!outfitItems.includes(randomItem)) {
+                        outfitItems.push(randomItem);
+                    }
+                }
+
+                return `
+                    <div class="recommendation-card">
+                        <div class="outfit-preview">
+                            ${outfitItems.slice(0, 3).map(item => item ? `
+                                <div class="outfit-item-mini">
+                                    <img src="${item.image}" alt="${item.name}">
+                                </div>
+                            ` : `
+                                <div class="outfit-item-mini outfit-item-placeholder">
+                                    ?
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="recommendation-content">
+                            <h3>Outfit ${index + 1}</h3>
+                            <div class="recommendation-reasoning">
+                                ${rec.reasoning || `This combination works great for a ${selectedMood} mood.`}
+                            </div>
+                            <div class="styling-tips">
+                                <strong>Styling Tip:</strong> ${rec.stylingTips || 'Complete the look with your favorite accessories.'}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+    </script>
+</body>
+</html>

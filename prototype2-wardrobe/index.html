@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wardrobe - Dashboard</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Full-Screen Login -->
+    <div class="fullscreen-login" id="desktopLogin">
+        <div class="fullscreen-login-content">
+            <div class="login-icon-large">👤</div>
+            <div style="display: flex; align-items: center; justify-content: center; gap: 1rem; margin-bottom: 1rem;">
+                <h1 class="login-title-large" style="margin: 0;">Welcome to Wardrobe</h1>
+                <div class="info-icon-wrapper">
+                    <svg class="info-icon" width="28" height="28" viewBox="0 0 24 24" fill="none">
+                        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                        <path d="M12 16V12M12 8H12.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                    <div class="info-tooltip">
+                        <div class="tooltip-header">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" style="color: #6366f1;">
+                                <path d="M20 7H4M20 7L18 21H6L4 7M20 7L18 3H6L4 7" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                            </svg>
+                            <h3>About Wardrobe</h3>
+                        </div>
+                        <p class="tooltip-description">Your wardrobe reflects who you are, but as you evolve, your closet can't always keep up. This app helps you track what you wear, understand your style patterns, and get AI-powered recommendations that match your mood and identity.</p>
+                        <div class="tooltip-features">
+                            <div class="tooltip-feature">
+                                <span class="feature-emoji">📸</span>
+                                <div>
+                                    <strong>Track Outfits</strong>
+                                    <p>Photo-log daily looks with mood tags</p>
+                                </div>
+                            </div>
+                            <div class="tooltip-feature">
+                                <span class="feature-emoji">📊</span>
+                                <div>
+                                    <strong>Discover Patterns</strong>
+                                    <p>See what you wear and what sits unused</p>
+                                </div>
+                            </div>
+                            <div class="tooltip-feature">
+                                <span class="feature-emoji">✨</span>
+                                <div>
+                                    <strong>AI Recommendations</strong>
+                                    <p>Get outfit ideas powered by Claude AI</p>
+                                </div>
+                            </div>
+                            <div class="tooltip-feature">
+                                <span class="feature-emoji">🛍️</span>
+                                <div>
+                                    <strong>Smart Shopping</strong>
+                                    <p>Intentional, not impulsive purchases</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <p class="login-subtitle-large">Your personal style companion</p>
+            <div class="login-form">
+                <input type="text" id="desktopUserName" placeholder="Enter your name" autocomplete="name" class="login-input-large">
+                <button class="btn-fullscreen" onclick="handleDesktopLogin()">Get Started →</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Full-Screen Onboarding -->
+    <div class="fullscreen-onboarding hidden" id="desktopOnboarding">
+        <button class="skip-button" onclick="skipDesktopOnboarding()">Skip</button>
+        <div class="fullscreen-slides">
+            <div class="fullscreen-slide active" data-slide="0">
+                <div class="slide-icon">👋</div>
+                <h1 class="slide-title">Welcome to Wardrobe</h1>
+                <p class="slide-description">Your personal style companion that helps you understand and optimize your wardrobe.</p>
+                <div class="feature-list">
+                    <div class="feature-item">📸 Track outfits by mood and purpose</div>
+                    <div class="feature-item">📊 View detailed analytics and patterns</div>
+                    <div class="feature-item">✨ Get AI-powered recommendations</div>
+                    <div class="feature-item">🛍️ Smart shopping suggestions</div>
+                </div>
+            </div>
+            
+            <div class="fullscreen-slide" data-slide="1">
+                <div class="slide-icon">📱</div>
+                <h1 class="slide-title">Quick Start Guide</h1>
+                <p class="slide-description">Get started in just three simple steps</p>
+                <div class="steps-container">
+                    <div class="step-item">
+                        <div class="step-num">1</div>
+                        <h3>Add Items</h3>
+                        <p>Upload photos of your clothing and outfits</p>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-num">2</div>
+                        <h3>Tag & Organize</h3>
+                        <p>Tag items by mood, purpose, and season</p>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-num">3</div>
+                        <h3>Get Insights</h3>
+                        <p>View analytics and get personalized recommendations</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="fullscreen-slide" data-slide="2">
+                <div class="slide-icon">🚀</div>
+                <h1 class="slide-title">Ready to Start?</h1>
+                <p class="slide-description">Your wardrobe awaits! Let's begin your style journey.</p>
+                <div class="cta-buttons">
+                    <button onclick="completeDesktopOnboarding()" class="btn-fullscreen btn-primary-full">Explore Dashboard →</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="fullscreen-progress">
+            <div class="progress-dots">
+                <div class="progress-dot active"></div>
+                <div class="progress-dot"></div>
+                <div class="progress-dot"></div>
+            </div>
+        </div>
+        
+        <div class="fullscreen-navigation">
+            <button class="nav-button" id="onboardingNextBtn" onclick="nextDesktopSlide()">Next →</button>
+        </div>
+    </div>
+
+    <nav class="sidebar">
+        <div class="logo">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                <path d="M16 4L4 10V22L16 28L28 22V10L16 4Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                <path d="M16 16L4 10M16 16L28 10M16 16V28" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+            </svg>
+            <span>Wardrobe</span>
+        </div>
+        <ul class="nav-links">
+            <li class="active">
+                <a href="index.html">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <rect x="3" y="3" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5"/>
+                        <rect x="11" y="3" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5"/>
+                        <rect x="3" y="11" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5"/>
+                        <rect x="11" y="11" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5"/>
+                    </svg>
+                    Dashboard
+                </a>
+            </li>
+            <li>
+                <a href="closet.html">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <rect x="3" y="2" width="14" height="16" rx="1" stroke="currentColor" stroke-width="1.5"/>
+                        <path d="M10 2V18M6 6H8M12 6H14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                    </svg>
+                    My Closet
+                </a>
+            </li>
+            <li>
+                <a href="add-item.html">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <circle cx="10" cy="10" r="7" stroke="currentColor" stroke-width="1.5"/>
+                        <path d="M10 7V13M7 10H13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                    </svg>
+                    Add Item
+                </a>
+            </li>
+            <li>
+                <a href="analytics.html">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path d="M3 14L7 10L11 14L17 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        <circle cx="7" cy="10" r="1.5" fill="currentColor"/>
+                        <circle cx="11" cy="14" r="1.5" fill="currentColor"/>
+                        <circle cx="17" cy="8" r="1.5" fill="currentColor"/>
+                    </svg>
+                    Analytics
+                </a>
+            </li>
+            <li>
+                <a href="recommendations.html">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path d="M10 3L12 8L17 8.5L13.5 12L14.5 17L10 14.5L5.5 17L6.5 12L3 8.5L8 8L10 3Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+                    </svg>
+                    Outfit Ideas
+                </a>
+            </li>
+            <li>
+                <a href="shopping.html">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path d="M6 6L4 2H16L14 6M6 6H14M6 6L5 18H15L14 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    Shopping
+                </a>
+            </li>
+        </ul>
+        <div style="margin-top: auto; padding-top: 2rem; border-top: 1px solid var(--border-color);">
+            <button onclick="handleDesktopLogout()" style="display: flex; align-items: center; gap: 0.75rem; width: 100%; padding: 0.75rem 1rem; background: none; border: none; color: #ef4444; font-weight: 500; border-radius: 0.5rem; cursor: pointer; transition: all 0.2s; text-align: left;">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M7 17H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3"/>
+                    <polyline points="13 14 17 10 13 6"/>
+                    <line x1="17" y1="10" x2="7" y2="10"/>
+                </svg>
+                Logout
+            </button>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <header class="page-header">
+            <div>
+                <h1>Dashboard</h1>
+                <p class="subtitle">Welcome back! Here's your wardrobe overview</p>
+            </div>
+            <div class="header-actions">
+                <button class="btn-secondary" id="loadDemoBtn" onclick="loadDemoData()" style="margin-right: 0.5rem;">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" style="margin-right: 0.5rem;">
+                        <path d="M10 3L12 8L17 8.5L13.5 12L14.5 17L10 14.5L5.5 17L6.5 12L3 8.5L8 8L10 3Z" stroke="currentColor" stroke-width="1.5"/>
+                    </svg>
+                    Load Demo Data
+                </button>
+                <button class="btn-icon" id="notificationBtn">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path d="M10 2C8 2 6 4 6 6V9L4 14H16L14 9V6C14 4 12 2 10 2Z" stroke="currentColor" stroke-width="1.5"/>
+                        <path d="M8 14C8 15.1046 8.89543 16 10 16C11.1046 16 12 15.1046 12 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                    </svg>
+                </button>
+            </div>
+        </header>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon" style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <path d="M20 7H4M20 7L18 21H6L4 7M20 7L18 3H6L4 7" stroke="white" stroke-width="2" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <div class="stat-content">
+                    <p class="stat-label">Total Items</p>
+                    <h2 class="stat-value" id="totalItems">0</h2>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon" style="background: linear-gradient(135deg, #475569 0%, #64748b 100%);">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <path d="M12 8V16M8 12H16" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                        <rect x="3" y="3" width="18" height="18" rx="2" stroke="white" stroke-width="2"/>
+                    </svg>
+                </div>
+                <div class="stat-content">
+                    <p class="stat-label">Outfits Logged</p>
+                    <h2 class="stat-value" id="totalOutfits">0</h2>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon" style="background: linear-gradient(135deg, #334155 0%, #475569 100%);">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <path d="M12 2L15 8L22 9L17 14L18 21L12 18L6 21L7 14L2 9L9 8L12 2Z" stroke="white" stroke-width="2" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <div class="stat-content">
+                    <p class="stat-label">Most Worn</p>
+                    <h2 class="stat-value" id="mostWorn">-</h2>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon" style="background: linear-gradient(135deg, #1e293b 0%, #334155 100%);">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <circle cx="12" cy="12" r="10" stroke="white" stroke-width="2"/>
+                        <path d="M8 14C8 14 9.5 16 12 16C14.5 16 16 14 16 14M9 9H9.01M15 9H15.01" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </div>
+                <div class="stat-content">
+                    <p class="stat-label">Favorite Mood</p>
+                    <h2 class="stat-value" id="favoriteMood">-</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-grid">
+            <section class="card recent-outfits">
+                <div class="card-header">
+                    <h3>Recent Outfits</h3>
+                    <a href="closet.html" class="link-text">View all</a>
+                </div>
+                <div class="outfit-timeline" id="recentOutfits">
+                    <div class="empty-state">
+                        <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
+                            <circle cx="32" cy="32" r="30" stroke="currentColor" stroke-width="2" opacity="0.2"/>
+                            <path d="M32 20V32L40 40" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity="0.3"/>
+                        </svg>
+                        <p>No outfits logged yet</p>
+                        <a href="add-item.html" class="btn-primary">Add Your First Outfit</a>
+                    </div>
+                </div>
+            </section>
+
+            <section class="card mood-tracker">
+                <div class="card-header">
+                    <h3>Mood Patterns</h3>
+                    <select class="select-simple" id="moodPeriod">
+                        <option>This Week</option>
+                        <option>This Month</option>
+                        <option>This Year</option>
+                    </select>
+                </div>
+                <div class="mood-chart" id="moodChart">
+                    <div class="empty-state-small">
+                        <p>Track your outfits to see mood patterns</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <section class="card wardrobe-insights">
+            <div class="card-header">
+                <h3>Wardrobe Insights</h3>
+            </div>
+            <div class="insights-grid" id="insightsGrid">
+                <div class="insight-card">
+                    <div class="insight-icon">💡</div>
+                    <h4>Start Building Your Wardrobe</h4>
+                    <p>Add photos of your clothes to unlock personalized insights and recommendations</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="card quick-actions">
+            <div class="card-header">
+                <h3>Quick Actions</h3>
+            </div>
+            <div class="actions-grid">
+                <a href="add-item.html" class="action-card">
+                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                        <rect x="6" y="6" width="20" height="20" rx="2" stroke="currentColor" stroke-width="2"/>
+                        <path d="M16 12V20M12 16H20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                    <span>Log Today's Outfit</span>
+                </a>
+                <a href="recommendations.html" class="action-card">
+                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                        <path d="M16 6L18.5 13L26 13.5L20 19.5L21.5 27L16 23L10.5 27L12 19.5L6 13.5L13.5 13L16 6Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                    </svg>
+                    <span>Get Outfit Ideas</span>
+                </a>
+                <a href="analytics.html" class="action-card">
+                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                        <rect x="6" y="18" width="5" height="8" rx="1" stroke="currentColor" stroke-width="2"/>
+                        <rect x="13.5" y="12" width="5" height="14" rx="1" stroke="currentColor" stroke-width="2"/>
+                        <rect x="21" y="6" width="5" height="20" rx="1" stroke="currentColor" stroke-width="2"/>
+                    </svg>
+                    <span>View Analytics</span>
+                </a>
+                <a href="shopping.html" class="action-card">
+                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                        <path d="M10 10L8 6H24L22 10M10 10H22M10 10L9 26H23L22 10" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                    </svg>
+                    <span>Shopping List</span>
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <script src="js/storage.js"></script>
+    <script src="js/app.js"></script>
+    <script>
+        // Desktop Login Logic
+        function handleDesktopLogin() {
+            const nameInput = document.getElementById('desktopUserName');
+            const name = nameInput.value.trim();
+            
+            if (!name) {
+                alert('Please enter your name');
+                return;
+            }
+            
+            localStorage.setItem('wardrobe_user_name', name);
+            document.getElementById('desktopLogin').classList.add('hidden');
+            
+            // Check if onboarding is needed
+            const onboardingCompleted = localStorage.getItem('wardrobe_desktop_onboarding_completed');
+            if (!onboardingCompleted) {
+                document.getElementById('desktopOnboarding').classList.remove('hidden');
+            }
+            
+            updateDesktopWelcomeMessage();
+        }
+
+        function handleDesktopLogout() {
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('wardrobe_user_name');
+                localStorage.removeItem('wardrobe_desktop_onboarding_completed');
+                window.location.reload();
+            }
+        }
+
+        function updateDesktopWelcomeMessage() {
+            const userName = localStorage.getItem('wardrobe_user_name');
+            if (userName) {
+                const subtitle = document.querySelector('.subtitle');
+                if (subtitle) {
+                    subtitle.textContent = `Welcome back, ${userName}!`;
+                }
+            }
+        }
+
+        // Desktop Onboarding Logic
+        let currentDesktopSlide = 0;
+        const totalDesktopSlides = 3;
+
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', () => {
+            // Check if user is logged in
+            const userName = localStorage.getItem('wardrobe_user_name');
+            if (!userName) {
+                document.getElementById('desktopLogin').classList.remove('hidden');
+                return;
+            } else {
+                document.getElementById('desktopLogin').classList.add('hidden');
+            }
+            
+            // Check if onboarding has been completed
+            const onboardingCompleted = localStorage.getItem('wardrobe_desktop_onboarding_completed');
+            if (!onboardingCompleted) {
+                document.getElementById('desktopOnboarding').classList.remove('hidden');
+            } else {
+                document.getElementById('desktopOnboarding').classList.add('hidden');
+            }
+            
+            updateDesktopWelcomeMessage();
+            loadDashboard();
+        });
+
+        function nextDesktopSlide() {
+            const slides = document.querySelectorAll('.fullscreen-slide');
+            const dots = document.querySelectorAll('.progress-dot');
+            const nextBtn = document.getElementById('onboardingNextBtn');
+            
+            currentDesktopSlide++;
+            
+            if (currentDesktopSlide >= totalDesktopSlides) {
+                completeDesktopOnboarding();
+                return;
+            }
+            
+            // Update slides
+            slides.forEach((slide, index) => {
+                slide.classList.toggle('active', index === currentDesktopSlide);
+            });
+            
+            // Update dots
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentDesktopSlide);
+            });
+            
+            // Update button text on last slide
+            if (currentDesktopSlide === totalDesktopSlides - 1) {
+                nextBtn.textContent = 'Finish';
+            }
+        }
+
+        function skipDesktopOnboarding() {
+            completeDesktopOnboarding();
+        }
+
+        function completeDesktopOnboarding() {
+            localStorage.setItem('wardrobe_desktop_onboarding_completed', 'true');
+            document.getElementById('desktopOnboarding').classList.add('hidden');
+        }
+
+        function loadDashboard() {
+            const items = Storage.getItems();
+            const outfits = Storage.getOutfits();
+            
+            // Update stats
+            document.getElementById('totalItems').textContent = items.length;
+            document.getElementById('totalOutfits').textContent = outfits.length;
+            
+            if (items.length > 0) {
+                // Calculate most worn item
+                const wearCounts = {};
+                items.forEach(item => {
+                    wearCounts[item.id] = item.wearCount || 0;
+                });
+                const mostWornId = Object.keys(wearCounts).reduce((a, b) => 
+                    wearCounts[a] > wearCounts[b] ? a : b
+                );
+                const mostWornItem = items.find(i => i.id === mostWornId);
+                document.getElementById('mostWorn').textContent = mostWornItem?.name || 'N/A';
+            }
+            
+            if (outfits.length > 0) {
+                // Calculate favorite mood
+                const moodCounts = {};
+                outfits.forEach(outfit => {
+                    outfit.emotions?.forEach(emotion => {
+                        moodCounts[emotion] = (moodCounts[emotion] || 0) + 1;
+                    });
+                });
+                const favMood = Object.keys(moodCounts).reduce((a, b) => 
+                    moodCounts[a] > moodCounts[b] ? a : b, null
+                );
+                if (favMood) {
+                    document.getElementById('favoriteMood').textContent = 
+                        favMood.charAt(0).toUpperCase() + favMood.slice(1);
+                }
+            }
+            
+            // Load recent outfits
+            loadRecentOutfits(outfits);
+            
+            // Load mood chart
+            loadMoodChart(outfits);
+            
+            // Load insights
+            loadInsights(items, outfits);
+        }
+        
+        function loadRecentOutfits(outfits) {
+            const container = document.getElementById('recentOutfits');
+            
+            if (outfits.length === 0) return;
+            
+            const recent = outfits.slice(-5).reverse();
+            container.innerHTML = recent.map(outfit => `
+                <div class="outfit-item">
+                    <img src="${outfit.image}" alt="Outfit" class="outfit-thumbnail">
+                    <div class="outfit-info">
+                        <div class="outfit-date">${formatDate(outfit.date)}</div>
+                        <div class="outfit-tags">
+                            ${outfit.emotions?.map(e => `<span class="tag tag-${e}">${e}</span>`).join('') || ''}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function loadMoodChart(outfits) {
+            const container = document.getElementById('moodChart');
+            
+            if (outfits.length === 0) return;
+            
+            const moodCounts = {};
+            outfits.forEach(outfit => {
+                outfit.emotions?.forEach(emotion => {
+                    moodCounts[emotion] = (moodCounts[emotion] || 0) + 1;
+                });
+            });
+            
+            const total = Object.values(moodCounts).reduce((a, b) => a + b, 0);
+            const sortedMoods = Object.entries(moodCounts)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 5);
+            
+            container.innerHTML = sortedMoods.map(([mood, count]) => {
+                const percentage = (count / total * 100).toFixed(1);
+                return `
+                    <div class="mood-bar">
+                        <div class="mood-label">
+                            <span>${mood}</span>
+                            <span>${percentage}%</span>
+                        </div>
+                        <div class="mood-progress">
+                            <div class="mood-fill" style="width: ${percentage}%"></div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        function loadInsights(items, outfits) {
+            const container = document.getElementById('insightsGrid');
+            
+            if (items.length === 0 && outfits.length === 0) return;
+            
+            const insights = [];
+            
+            // Calculate least worn items
+            const leastWorn = items
+                .filter(item => (item.wearCount || 0) === 0)
+                .length;
+            
+            if (leastWorn > 0) {
+                insights.push({
+                    icon: '👕',
+                    title: `${leastWorn} Unworn Items`,
+                    text: 'You have items in your closet that haven\'t been worn yet. Try incorporating them into new outfits!'
+                });
+            }
+            
+            // Check for color diversity
+            const colors = new Set();
+            items.forEach(item => {
+                if (item.color) colors.add(item.color);
+            });
+            
+            if (colors.size < 5 && items.length > 10) {
+                insights.push({
+                    icon: '🎨',
+                    title: 'Limited Color Palette',
+                    text: 'Your wardrobe could benefit from more color variety. Consider adding complementary colors!'
+                });
+            }
+            
+            // Check outfit frequency
+            const recentOutfits = outfits.filter(o => {
+                const date = new Date(o.date);
+                const weekAgo = new Date();
+                weekAgo.setDate(weekAgo.getDate() - 7);
+                return date > weekAgo;
+            });
+            
+            if (recentOutfits.length > 5) {
+                insights.push({
+                    icon: '🔥',
+                    title: 'Great Tracking Habit!',
+                    text: `You've logged ${recentOutfits.length} outfits this week. Keep up the consistency!`
+                });
+            }
+            
+            if (insights.length > 0) {
+                container.innerHTML = insights.map(insight => `
+                    <div class="insight-card">
+                        <div class="insight-icon">${insight.icon}</div>
+                        <h4>${insight.title}</h4>
+                        <p>${insight.text}</p>
+                    </div>
+                `).join('');
+            }
+        }
+        
+        function formatDate(dateStr) {
+            const date = new Date(dateStr);
+            const today = new Date();
+            const yesterday = new Date(today);
+            yesterday.setDate(yesterday.getDate() - 1);
+            
+            if (date.toDateString() === today.toDateString()) {
+                return 'Today';
+            } else if (date.toDateString() === yesterday.toDateString()) {
+                return 'Yesterday';
+            } else {
+                return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+            }
+        }
+
+        // Load Demo Data
+        function loadDemoData() {
+            if (!confirm('This will add sample items and outfits to your wardrobe. Continue?')) {
+                return;
+            }
+
+            // Demo items with placeholder images
+            const demoItems = [
+                { name: 'Black Blazer', type: 'outerwear', color: '#000000', season: ['fall', 'winter', 'spring'] },
+                { name: 'White Button-Up', type: 'top', color: '#FFFFFF', season: ['spring', 'summer', 'fall', 'winter'] },
+                { name: 'Blue Jeans', type: 'bottom', color: '#0000FF', season: ['spring', 'summer', 'fall', 'winter'] },
+                { name: 'Leather Boots', type: 'shoes', color: '#A52A2A', season: ['fall', 'winter'] },
+                { name: 'Summer Dress', type: 'dress', color: '#FFFF00', season: ['summer'] },
+                { name: 'Gray Sweater', type: 'top', color: '#808080', season: ['fall', 'winter'] },
+                { name: 'Black Pants', type: 'bottom', color: '#000000', season: ['spring', 'summer', 'fall', 'winter'] },
+                { name: 'Red Scarf', type: 'accessory', color: '#FF0000', season: ['fall', 'winter'] }
+            ];
+
+            // Create placeholder images and add items
+            const itemIds = [];
+            demoItems.forEach(item => {
+                // Create a simple placeholder image
+                const canvas = document.createElement('canvas');
+                canvas.width = 400;
+                canvas.height = 400;
+                const ctx = canvas.getContext('2d');
+                ctx.fillStyle = item.color;
+                ctx.fillRect(0, 0, 400, 400);
+                ctx.fillStyle = item.color === '#FFFFFF' || item.color === '#FFFF00' ? '#000000' : '#FFFFFF';
+                ctx.font = '30px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText(item.name, 200, 200);
+                
+                item.image = canvas.toDataURL();
+                const newItem = Storage.addItem(item);
+                itemIds.push(newItem.id);
+            });
+
+            // Demo outfits
+            const demoOutfits = [
+                {
+                    items: [itemIds[0], itemIds[1], itemIds[2]], // Blazer, White Shirt, Jeans
+                    emotions: ['confident', 'professional'],
+                    purposes: ['work'],
+                    notes: 'Perfect for the office'
+                },
+                {
+                    items: [itemIds[4]], // Summer Dress
+                    emotions: ['happy', 'relaxed'],
+                    purposes: ['casual'],
+                    notes: 'Sunny day outfit'
+                },
+                {
+                    items: [itemIds[5], itemIds[6]], // Sweater, Black Pants
+                    emotions: ['relaxed'],
+                    purposes: ['casual'],
+                    notes: 'Cozy weekend look'
+                }
+            ];
+
+            demoOutfits.forEach((outfit, index) => {
+                // Create placeholder outfit image
+                const canvas = document.createElement('canvas');
+                canvas.width = 600;
+                canvas.height = 400;
+                const ctx = canvas.getContext('2d');
+                ctx.fillStyle = '#f5f5f5';
+                ctx.fillRect(0, 0, 600, 400);
+                ctx.fillStyle = '#0f172a';
+                ctx.font = '24px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText(`Outfit ${index + 1}`, 300, 200);
+                
+                outfit.image = canvas.toDataURL();
+                outfit.date = new Date(Date.now() - (index * 86400000)).toISOString(); // Spread over last 3 days
+                Storage.addOutfit(outfit);
+            });
+
+            alert('Demo data loaded successfully! 🎉');
+            
+            // Reload dashboard
+            loadDashboard();
+            
+            // Hide the button after loading
+            document.getElementById('loadDemoBtn').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thrift & Swap - Your Style Evolution</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="login-screen" class="screen active">
+        <div class="login-container">
+            <div class="logo">
+                <h1>Thrift & Swap</h1>
+                <p class="tagline">Your Style Evolution</p>
+            </div>
+            <div class="login-form">
+                <input type="text" id="username-input" placeholder="Enter your name" maxlength="50">
+                <button id="login-btn" class="primary-btn">Continue</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Onboarding Screens -->
+    <div id="onboarding-screen" class="screen">
+        <div class="onboarding-container">
+            <!-- Welcome -->
+            <div class="onboarding-step active" data-step="1">
+                <h2>Welcome to Thrift & Swap!</h2>
+                <p class="onboarding-text">A sustainable platform where you can sell clothing to earn points and swap for new styles that match who you are today.</p>
+                <div class="onboarding-features">
+                    <div class="feature-card">
+                        <span class="feature-icon">♻️</span>
+                        <h3>Sell & Earn</h3>
+                        <p>Upload items to earn points</p>
+                    </div>
+                    <div class="feature-card">
+                        <span class="feature-icon">✨</span>
+                        <h3>Swap & Explore</h3>
+                        <p>Use points to discover new styles</p>
+                    </div>
+                    <div class="feature-card">
+                        <span class="feature-icon">🎯</span>
+                        <h3>Track & Grow</h3>
+                        <p>Monitor your style evolution</p>
+                    </div>
+                </div>
+                <button class="primary-btn onboarding-next">Next</button>
+            </div>
+
+            <!-- Style Preferences -->
+            <div class="onboarding-step" data-step="2">
+                <h2>What's Your Style?</h2>
+                <p class="onboarding-text">Select your style preferences (choose multiple)</p>
+                <div class="style-grid">
+                    <div class="style-option" data-style="casual">
+                        <div class="style-card">
+                            <span class="style-emoji">👕</span>
+                            <h3>Casual</h3>
+                        </div>
+                    </div>
+                    <div class="style-option" data-style="formal">
+                        <div class="style-card">
+                            <span class="style-emoji">👔</span>
+                            <h3>Formal</h3>
+                        </div>
+                    </div>
+                    <div class="style-option" data-style="streetwear">
+                        <div class="style-card">
+                            <span class="style-emoji">🧢</span>
+                            <h3>Streetwear</h3>
+                        </div>
+                    </div>
+                    <div class="style-option" data-style="vintage">
+                        <div class="style-card">
+                            <span class="style-emoji">🕰️</span>
+                            <h3>Vintage</h3>
+                        </div>
+                    </div>
+                    <div class="style-option" data-style="minimalist">
+                        <div class="style-card">
+                            <span class="style-emoji">⚪</span>
+                            <h3>Minimalist</h3>
+                        </div>
+                    </div>
+                    <div class="style-option" data-style="bohemian">
+                        <div class="style-card">
+                            <span class="style-emoji">🌸</span>
+                            <h3>Bohemian</h3>
+                        </div>
+                    </div>
+                </div>
+                <button class="primary-btn onboarding-next">Next</button>
+            </div>
+
+            <!-- Size Preferences -->
+            <div class="onboarding-step" data-step="3">
+                <h2>Size Preferences</h2>
+                <p class="onboarding-text">Select your typical clothing sizes</p>
+                <div class="size-form">
+                    <div class="form-group">
+                        <label>Top Size</label>
+                        <select id="top-size">
+                            <option value="">Select size</option>
+                            <option value="XS">XS</option>
+                            <option value="S">S</option>
+                            <option value="M">M</option>
+                            <option value="L">L</option>
+                            <option value="XL">XL</option>
+                            <option value="XXL">XXL</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Bottom Size</label>
+                        <select id="bottom-size">
+                            <option value="">Select size</option>
+                            <option value="24">24</option>
+                            <option value="26">26</option>
+                            <option value="28">28</option>
+                            <option value="30">30</option>
+                            <option value="32">32</option>
+                            <option value="34">34</option>
+                            <option value="36">36</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Shoe Size</label>
+                        <select id="shoe-size">
+                            <option value="">Select size</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="10">10</option>
+                            <option value="11">11</option>
+                            <option value="12">12</option>
+                        </select>
+                    </div>
+                </div>
+                <button class="primary-btn onboarding-next">Complete Setup</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App -->
+    <div id="main-app" class="screen">
+        <!-- Navigation -->
+        <nav class="main-nav">
+            <div class="nav-brand">
+                <h2>Thrift & Swap</h2>
+            </div>
+            <div class="nav-links">
+                <a href="#" class="nav-link active" data-page="dashboard">Dashboard</a>
+                <a href="#" class="nav-link" data-page="browse">Browse</a>
+                <a href="#" class="nav-link" data-page="sell">Sell</a>
+                <a href="#" class="nav-link" data-page="closet">My Closet</a>
+                <a href="#" class="nav-link" data-page="subscription">Subscription</a>
+            </div>
+            <div class="nav-user">
+                <div class="points-badge">
+                    <span class="points-icon">⭐</span>
+                    <span id="user-points">0</span> pts
+                </div>
+                <span id="nav-username" class="username">User</span>
+                <button id="logout-btn" class="logout-btn" title="Logout">🚪</button>
+            </div>
+        </nav>
+
+        <!-- Page Container -->
+        <div class="page-container">
+            <!-- Dashboard Page -->
+            <div id="dashboard-page" class="page active">
+                <div class="dashboard-header">
+                    <h1>Welcome back, <span id="dashboard-username"></span>!</h1>
+                    <p class="subtitle">Continue your style evolution</p>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card lavender">
+                        <h3>Your Points</h3>
+                        <p class="stat-value" id="dashboard-points">0</p>
+                        <span class="stat-label">Available to spend</span>
+                    </div>
+                    <div class="stat-card mint">
+                        <h3>Items Sold</h3>
+                        <p class="stat-value" id="items-sold">0</p>
+                        <span class="stat-label">Total earnings</span>
+                    </div>
+                    <div class="stat-card peach">
+                        <h3>Items Swapped</h3>
+                        <p class="stat-value" id="items-swapped">0</p>
+                        <span class="stat-label">This month</span>
+                    </div>
+                    <div class="stat-card skyblue">
+                        <h3>Subscription</h3>
+                        <p class="stat-value" id="subscription-tier">Free</p>
+                        <span class="stat-label">Current plan</span>
+                    </div>
+                </div>
+
+                <div class="dashboard-actions">
+                    <h2>Quick Actions</h2>
+                    <div class="action-cards">
+                        <div class="action-card" data-action="browse">
+                            <span class="action-icon">🛍️</span>
+                            <h3>Browse Items</h3>
+                            <p>Discover new styles</p>
+                        </div>
+                        <div class="action-card" data-action="sell">
+                            <span class="action-icon">💰</span>
+                            <h3>Sell Items</h3>
+                            <p>Upload and earn points</p>
+                        </div>
+                        <div class="action-card" data-action="closet">
+                            <span class="action-icon">👗</span>
+                            <h3>My Closet</h3>
+                            <p>View your collection</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Browse Page -->
+            <div id="browse-page" class="page">
+                <div class="page-header">
+                    <h1>Browse Items</h1>
+                    <button id="load-demo-data-btn" class="secondary-btn">Load Demo Data</button>
+                </div>
+
+                <div class="filters">
+                    <select id="category-filter">
+                        <option value="all">All Categories</option>
+                        <option value="tops">Tops</option>
+                        <option value="bottoms">Bottoms</option>
+                        <option value="dresses">Dresses</option>
+                        <option value="outerwear">Outerwear</option>
+                        <option value="shoes">Shoes</option>
+                        <option value="accessories">Accessories</option>
+                    </select>
+                    <select id="points-filter">
+                        <option value="all">All Points</option>
+                        <option value="0-100">0-100 pts</option>
+                        <option value="101-300">101-300 pts</option>
+                        <option value="301-500">301-500 pts</option>
+                        <option value="501+">501+ pts</option>
+                    </select>
+                </div>
+
+                <div id="items-grid" class="items-grid">
+                    <p class="empty-state">No items available. Load demo data or wait for other users to list items!</p>
+                </div>
+            </div>
+
+            <!-- Sell Page -->
+            <div id="sell-page" class="page">
+                <div class="page-header">
+                    <h1>Sell Your Items</h1>
+                    <p class="subtitle">Upload clothing to earn points</p>
+                </div>
+
+                <div class="sell-form">
+                    <div class="form-section">
+                        <h3>Item Details</h3>
+                        <div class="form-group">
+                            <label>Item Name *</label>
+                            <input type="text" id="item-name" placeholder="e.g., Blue Denim Jacket" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Category *</label>
+                            <select id="item-category" required>
+                                <option value="">Select category</option>
+                                <option value="tops">Tops</option>
+                                <option value="bottoms">Bottoms</option>
+                                <option value="dresses">Dresses</option>
+                                <option value="outerwear">Outerwear</option>
+                                <option value="shoes">Shoes</option>
+                                <option value="accessories">Accessories</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Brand *</label>
+                            <input type="text" id="item-brand" placeholder="e.g., Levi's" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Size *</label>
+                            <input type="text" id="item-size" placeholder="e.g., M, 32, 9" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Condition *</label>
+                            <select id="item-condition" required>
+                                <option value="">Select condition</option>
+                                <option value="good">Good (1.0x points)</option>
+                                <option value="very-good">Very Good (1.3x points)</option>
+                                <option value="excellent">Excellent (1.6x points)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Description</label>
+                            <textarea id="item-description" placeholder="Describe the item, any details, flaws, etc." rows="4"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3>Item Photo</h3>
+                        <div class="image-upload">
+                            <input type="file" id="item-image" accept="image/*" style="display: none;">
+                            <div id="image-preview" class="image-preview">
+                                <button type="button" class="upload-btn" id="upload-trigger">
+                                    <span class="upload-icon">📷</span>
+                                    <span>Click to upload photo</span>
+                                </button>
+                            </div>
+                        </div>
+                        <p class="helper-text">Upload a clear photo of your item</p>
+                    </div>
+
+                    <div class="form-section">
+                        <h3>Estimated Points</h3>
+                        <div class="points-estimate">
+                            <p class="estimate-value" id="points-estimate">0</p>
+                            <p class="estimate-label">points</p>
+                        </div>
+                        <p class="helper-text">Based on brand, condition, and category</p>
+                    </div>
+
+                    <button id="list-item-btn" class="primary-btn large">List Item</button>
+                </div>
+            </div>
+
+            <!-- Closet Page -->
+            <div id="closet-page" class="page">
+                <div class="page-header">
+                    <h1>My Closet</h1>
+                    <div class="closet-tabs">
+                        <button class="tab-btn active" data-tab="owned">Owned Items</button>
+                        <button class="tab-btn" data-tab="listed">Listed for Sale</button>
+                    </div>
+                </div>
+
+                <div id="owned-items" class="closet-tab-content active">
+                    <div id="owned-items-grid" class="items-grid">
+                        <p class="empty-state">You haven't swapped for any items yet. Browse available items to start building your closet!</p>
+                    </div>
+                </div>
+
+                <div id="listed-items" class="closet-tab-content">
+                    <div id="listed-items-grid" class="items-grid">
+                        <p class="empty-state">You haven't listed any items for sale yet. Upload items to earn points!</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Subscription Page -->
+            <div id="subscription-page" class="page">
+                <div class="page-header">
+                    <h1>Subscription Plans</h1>
+                    <p class="subtitle">Unlock more swaps and benefits</p>
+                </div>
+
+                <div class="subscription-grid">
+                    <div class="subscription-card free" data-tier="free">
+                        <h3>Free</h3>
+                        <p class="price">$0<span>/month</span></p>
+                        <ul class="features">
+                            <li>✓ 3 swaps per month</li>
+                            <li>✓ Standard point rates</li>
+                            <li>✓ Access to all items</li>
+                            <li>✓ Basic support</li>
+                        </ul>
+                        <button class="subscribe-btn" data-tier="free">Current Plan</button>
+                    </div>
+
+                    <div class="subscription-card premium" data-tier="premium">
+                        <div class="popular-badge">Popular</div>
+                        <h3>Premium</h3>
+                        <p class="price">$9.99<span>/month</span></p>
+                        <ul class="features">
+                            <li>✓ 10 swaps per month</li>
+                            <li>✓ 10% bonus points on sales</li>
+                            <li>✓ Early access to new items</li>
+                            <li>✓ Priority support</li>
+                        </ul>
+                        <button class="subscribe-btn" data-tier="premium">Upgrade</button>
+                    </div>
+
+                    <div class="subscription-card unlimited" data-tier="unlimited">
+                        <h3>Unlimited</h3>
+                        <p class="price">$19.99<span>/month</span></p>
+                        <ul class="features">
+                            <li>✓ Unlimited swaps</li>
+                            <li>✓ 20% bonus points on sales</li>
+                            <li>✓ Priority item listings</li>
+                            <li>✓ Exclusive early access</li>
+                            <li>✓ VIP support</li>
+                        </ul>
+                        <button class="subscribe-btn" data-tier="unlimited">Upgrade</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sentiment Modal -->
+    <div id="sentiment-modal" class="modal">
+        <div class="modal-content">
+            <h2>How's your recent swap?</h2>
+            <p class="modal-subtitle">We'd love to hear about your experience with "<span id="sentiment-item-name"></span>"</p>
+            
+            <div class="sentiment-questions">
+                <div class="question">
+                    <label>How satisfied are you with this item?</label>
+                    <div class="rating-stars">
+                        <span class="star" data-rating="1">⭐</span>
+                        <span class="star" data-rating="2">⭐</span>
+                        <span class="star" data-rating="3">⭐</span>
+                        <span class="star" data-rating="4">⭐</span>
+                        <span class="star" data-rating="5">⭐</span>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <label>Does it align with your current style?</label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="alignment" value="yes"> Yes, perfectly</label>
+                        <label><input type="radio" name="alignment" value="somewhat"> Somewhat</label>
+                        <label><input type="radio" name="alignment" value="no"> Not really</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <label>How likely are you to wear it again?</label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="likelihood" value="very"> Very likely</label>
+                        <label><input type="radio" name="likelihood" value="maybe"> Maybe</label>
+                        <label><input type="radio" name="likelihood" value="unlikely"> Unlikely</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <label>Any additional feedback?</label>
+                    <textarea id="sentiment-feedback" placeholder="Share your thoughts..." rows="3"></textarea>
+                </div>
+            </div>
+
+            <div class="modal-actions">
+                <button class="secondary-btn" id="sentiment-skip">Skip</button>
+                <button class="primary-btn" id="sentiment-submit">Submit Feedback</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Item Detail Modal -->
+    <div id="item-modal" class="modal">
+        <div class="modal-content item-modal-content">
+            <button class="modal-close" id="close-item-modal">×</button>
+            <div class="item-detail-grid">
+                <div class="item-detail-image">
+                    <img id="modal-item-image" src="" alt="Item">
+                </div>
+                <div class="item-detail-info">
+                    <h2 id="modal-item-name"></h2>
+                    <p class="item-brand" id="modal-item-brand"></p>
+                    <div class="item-tags">
+                        <span class="tag" id="modal-item-category"></span>
+                        <span class="tag" id="modal-item-size"></span>
+                        <span class="tag" id="modal-item-condition"></span>
+                    </div>
+                    <p class="item-description" id="modal-item-description"></p>
+                    <div class="item-points">
+                        <span class="points-value" id="modal-item-points"></span>
+                        <span class="points-label">points</span>
+                    </div>
+                    <button id="swap-item-btn" class="primary-btn large">Swap for This Item</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
