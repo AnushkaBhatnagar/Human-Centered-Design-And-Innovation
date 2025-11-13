@@ -1,39 +1,17 @@
 {
   "version": 2,
-  "builds": [
+  "rewrites": [
     {
-      "src": "api/**/*.js",
-      "use": "@vercel/node"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "/api/$1"
+      "source": "/prototype1-aspire/:path*",
+      "destination": "/prototype1-aspire/:path*"
     },
     {
-      "src": "/prototype1-aspire/(.*)",
-      "dest": "/prototype1-aspire/$1"
+      "source": "/prototype2-wardrobe/:path*",
+      "destination": "/prototype2-wardrobe/:path*"
     },
     {
-      "src": "/prototype1-aspire",
-      "dest": "/prototype1-aspire/index.html"
-    },
-    {
-      "src": "/prototype2-wardrobe/(.*)",
-      "dest": "/prototype2-wardrobe/$1"
-    },
-    {
-      "src": "/prototype2-wardrobe",
-      "dest": "/prototype2-wardrobe/index.html"
-    },
-    {
-      "src": "/prototype3-thrift/(.*)",
-      "dest": "/prototype3-thrift/$1"
-    },
-    {
-      "src": "/prototype3-thrift",
-      "dest": "/prototype3-thrift/index.html"
+      "source": "/prototype3-thrift/:path*",
+      "destination": "/prototype3-thrift/:path*"
     }
   ],
   "headers": [
