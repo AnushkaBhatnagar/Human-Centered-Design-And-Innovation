@@ -1,5 +1,18 @@
 {
   "version": 2,
-  "cleanUrls": true,
-  "trailingSlash": false
+  "public": true,
+  "rewrites": [
+    {
+      "source": "/prototype1-aspire",
+      "destination": "/prototype1-aspire/index.html"
+    },
+    {
+      "source": "/prototype2-wardrobe",
+      "destination": "/prototype2-wardrobe/index.html"
+    },
+    {
+      "source": "/prototype3-thrift",
+      "destination": "/prototype3-thrift/index.html"
+    }
+  ]
 }
