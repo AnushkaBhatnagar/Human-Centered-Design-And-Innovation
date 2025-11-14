@@ -1,36 +1,5 @@
 {
   "version": 2,
-  "rewrites": [
-    {
-      "source": "/prototype1-aspire/:path*",
-      "destination": "/prototype1-aspire/:path*"
-    },
-    {
-      "source": "/prototype2-wardrobe/:path*",
-      "destination": "/prototype2-wardrobe/:path*"
-    },
-    {
-      "source": "/prototype3-thrift/:path*",
-      "destination": "/prototype3-thrift/:path*"
-    }
-  ],
-  "headers": [
-    {
-      "source": "/api/(.*)",
-      "headers": [
-        {
-          "key": "Access-Control-Allow-Origin",
-          "value": "*"
-        },
-        {
-          "key": "Access-Control-Allow-Methods",
-          "value": "GET, POST, PUT, DELETE, OPTIONS"
-        },
-        {
-          "key": "Access-Control-Allow-Headers",
-          "value": "Content-Type, Authorization"
-        }
-      ]
-    }
-  ]
+  "cleanUrls": true,
+  "trailingSlash": false
 }
