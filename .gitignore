@@ -40,3 +40,6 @@ yarn-error.log*
 # Build outputs
 dist/
 build/
+
+# Local development servers with API keys
+prototype4-aspire/server.py

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aspire - Identity Evolution Engine</title>
+    <link rel="stylesheet" href="css/aspire-loop.css">
+    <link rel="stylesheet" href="css/identity-viz.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=EB+Garamond:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Clean Phone Frame -->
+    <div class="phone-container">
+        <div class="phone-frame">
+            <!-- App Content -->
+            <div id="app" class="app-content">
+                <!-- Dynamic content loads here -->
+            </div>
+            
+            <!-- Bottom Navigation -->
+            <nav class="bottom-nav">
+                <button class="nav-item active" data-page="dashboard">
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                    </svg>
+                    <span class="nav-label">Home</span>
+                </button>
+                <button class="nav-item" data-page="identity">
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="3"></circle>
+                        <path d="M12 1v6m0 6v6m5.2-13.2l-4.3 4.3m0 5.8l4.3 4.3M23 12h-6m-6 0H1m18.2 5.2l-4.3-4.3m-5.8 0l-4.3 4.3"></path>
+                    </svg>
+                    <span class="nav-label">Identity</span>
+                </button>
+                <button class="nav-item nav-item-primary" data-page="daily-log">
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <circle cx="12" cy="12" r="3"></circle>
+                    </svg>
+                    <span class="nav-label">Log</span>
+                </button>
+                <button class="nav-item" data-page="progress">
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                    </svg>
+                    <span class="nav-label">Progress</span>
+                </button>
+                <button class="nav-item" data-page="profile">
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="8" r="4"></circle>
+                        <path d="M3 21v-2a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v2"></path>
+                    </svg>
+                    <span class="nav-label">Profile</span>
+                </button>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/storage.js"></script>
+    <script src="js/claude-ai.js"></script>
+    <script src="js/identity-engine.js"></script>
+    <script src="js/wardrobe-detector.js"></script>
+    <script src="js/alignment-scorer.js"></script>
+    <script src="js/behavior-tracker.js"></script>
+    <script src="js/outfit-generator.js"></script>
+    <script src="js/progress-tracker.js"></script>
+    <script src="js/gap-analyzer.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
