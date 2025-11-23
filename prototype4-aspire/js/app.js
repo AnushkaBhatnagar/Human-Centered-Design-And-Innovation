@@ -94,6 +94,10 @@ const App = {
                 app.innerHTML = this.renderAddWardrobeItem();
                 this.initAddWardrobeItem();
                 break;
+            case 'wardrobe':
+                app.innerHTML = this.renderWardrobe();
+                this.initWardrobe();
+                break;
             default:
                 app.innerHTML = this.renderDashboard();
         }
@@ -829,7 +833,7 @@ const App = {
         return `
             <div class="fade-in">
                 <div class="flex justify-between items-center mb-lg">
-                    <h2>Add Item</h2>
+                    <h2>Add to Wardrobe</h2>
                     <button class="btn btn-ghost" onclick="App.navigate('dashboard')">Cancel</button>
                 </div>
 
@@ -841,69 +845,256 @@ const App = {
                             <polyline points="21 15 16 10 5 21"></polyline>
                         </svg>
                     </div>
-                    <div class="upload-text">Upload item photo</div>
-                    <div class="upload-hint">AI will auto-detect the item</div>
+                    <div class="upload-text">Upload Photos</div>
+                    <div class="upload-hint">AI will detect all clothing items</div>
                 </div>
 
-                <div id="itemImagePreview"></div>
+                <div id="itemImagePreview" class="preview-grid"></div>
 
-                <div class="form-group">
-                    <label class="form-label">Description (Optional)</label>
-                    <textarea id="itemDescription" class="form-textarea" 
-                              placeholder="Add details to help AI identify the item better (optional)"></textarea>
-                    <p style="font-size: 12px; color: var(--text-tertiary); margin-top: 8px;">
-                        💡 Upload an image and AI will automatically detect the item type, color, and style!
-                    </p>
+                <div id="detectedItems" style="display: none;">
+                    <h3 class="mb-md mt-xl">Detected Items</h3>
+                    <div id="detectedItemsList"></div>
+                    <div class="flex gap-md mt-lg">
+                        <button id="addAllBtn" class="btn btn-primary" style="flex: 1;">
+                            Add All to Wardrobe
+                        </button>
+                        <button class="btn btn-secondary" onclick="App.navigate('wardrobe')">
+                            View Wardrobe
+                        </button>
+                    </div>
                 </div>
 
-                <button id="addItemBtn" class="btn btn-primary btn-full">
-                    Add to Wardrobe
+                <button id="detectBtn" class="btn btn-primary btn-full mt-lg" style="display: none;">
+                    Detect Items
                 </button>
             </div>
         `;
     },
 
     initAddWardrobeItem() {
-        let imageData = null;
+        this.selectedImages = [];
+        this.detectedItems = [];
 
         const imageArea = document.getElementById('itemImageArea');
         const imagePreview = document.getElementById('itemImagePreview');
-        const addBtn = document.getElementById('addItemBtn');
+        const detectBtn = document.getElementById('detectBtn');
 
         imageArea.addEventListener('click', () => {
             const input = document.createElement('input');
             input.type = 'file';
             input.accept = 'image/*';
+            input.multiple = true;
             input.onchange = (e) => {
-                const file = e.target.files[0];
-                const reader = new FileReader();
-                reader.onload = (event) => {
-                    imageData = event.target.result;
-                    imagePreview.innerHTML = `
-                        <img src="${imageData}" style="width: 100%; border-radius: 16px; margin-bottom: 16px;" />
-                    `;
-                };
-                reader.readAsDataURL(file);
+                Array.from(e.target.files).forEach(file => {
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        this.selectedImages.push(event.target.result);
+                        this.updateImagePreview();
+                        detectBtn.style.display = 'block';
+                    };
+                    reader.readAsDataURL(file);
+                });
             };
             input.click();
         });
 
-        addBtn.addEventListener('click', async () => {
-            const description = document.getElementById('itemDescription').value.trim();
-
-            // Require either image or description
-            if (!imageData && !description) {
-                alert('Please upload an image or provide a description');
+        detectBtn.addEventListener('click', async () => {
+            if (this.selectedImages.length === 0) {
+                alert('Please upload at least one image');
                 return;
             }
 
             try {
-                await WardrobeDetector.addItemWithDetection(description, imageData);
-                this.navigate('dashboard');
+                await this.detectItemsFromImages();
             } catch (error) {
-                alert('Error adding item: ' + error.message);
+                alert('Error detecting items: ' + error.message);
             }
         });
+    },
+
+    updateImagePreview() {
+        const preview = document.getElementById('itemImagePreview');
+        preview.innerHTML = this.selectedImages.map((img, index) => `
+            <div class="preview-item">
+                <img src="${img}" class="preview-image" />
+                <div class="preview-remove" onclick="App.removeUploadImage(${index})">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </div>
+            </div>
+        `).join('');
+    },
+
+    removeUploadImage(index) {
+        this.selectedImages.splice(index, 1);
+        this.updateImagePreview();
+        if (this.selectedImages.length === 0) {
+            document.getElementById('detectBtn').style.display = 'none';
+        }
+    },
+
+    async detectItemsFromImages() {
+        const loading = ClaudeAI.showLoading(`Analyzing ${this.selectedImages.length} image(s)...`);
+        this.detectedItems = [];
+
+        try {
+            // Process each image
+            for (let i = 0; i < this.selectedImages.length; i++) {
+                const items = await ClaudeAI.detectMultipleItems(this.selectedImages[i]);
+                this.detectedItems.push(...items);
+            }
+
+            ClaudeAI.hideLoading(loading);
+            this.showDetectedItems();
+        } catch (error) {
+            ClaudeAI.hideLoading(loading);
+            throw error;
+        }
+    },
+
+    showDetectedItems() {
+        const detectedSection = document.getElementById('detectedItems');
+        const itemsList = document.getElementById('detectedItemsList');
+
+        itemsList.innerHTML = this.detectedItems.map((item, index) => `
+            <div class="card mb-sm" style="display: flex; align-items: center; gap: 12px;">
+                <input type="checkbox" checked class="item-checkbox" data-index="${index}" 
+                       style="width: 20px; height: 20px;" />
+                <div style="flex: 1;">
+                    <div style="font-weight: 600;">${item.name}</div>
+                    <div style="font-size: 12px; color: var(--text-tertiary);">
+                        ${item.category} • ${item.color} • ${item.formality}
+                    </div>
+                </div>
+            </div>
+        `).join('');
+
+        detectedSection.style.display = 'block';
+        document.getElementById('detectBtn').style.display = 'none';
+
+        // Setup add all button
+        document.getElementById('addAllBtn').onclick = () => this.addSelectedItems();
+    },
+
+    addSelectedItems() {
+        const checkboxes = document.querySelectorAll('.item-checkbox:checked');
+        const selectedIndexes = Array.from(checkboxes).map(cb => parseInt(cb.dataset.index));
+        
+        selectedIndexes.forEach(index => {
+            const item = this.detectedItems[index];
+            Storage.addWardrobeItem({
+                ...item,
+                imageData: null,
+                source: 'ai-detected',
+                confirmed: true
+            });
+        });
+
+        alert(`Added ${selectedIndexes.length} items to your wardrobe!`);
+        this.navigate('wardrobe');
+    },
+
+    // WARDROBE VIEW PAGE
+    renderWardrobe() {
+        const wardrobe = Storage.getWardrobeItems();
+        const categories = ['all', 'top', 'bottom', 'shoes', 'accessory', 'outerwear'];
+
+        return `
+            <div class="fade-in">
+                <div class="flex justify-between items-center mb-lg">
+                    <h2>Your Wardrobe</h2>
+                    <button class="btn btn-primary" onclick="App.navigate('add-wardrobe-item')">
+                        + Add
+                    </button>
+                </div>
+
+                <p class="mb-lg" style="color: var(--text-secondary);">
+                    ${wardrobe.length} ${wardrobe.length === 1 ? 'item' : 'items'}
+                </p>
+
+                <div class="chip-group mb-lg">
+                    ${categories.map(cat => `
+                        <button class="chip ${cat === 'all' ? 'active' : ''}" data-category="${cat}">
+                            ${cat === 'all' ? 'All' : cat.charAt(0).toUpperCase() + cat.slice(1)}
+                        </button>
+                    `).join('')}
+                </div>
+
+                <div id="wardrobeGrid">
+                    ${wardrobe.length > 0 ? `
+                        ${wardrobe.map(item => `
+                            <div class="card mb-sm wardrobe-item" data-category="${item.category}">
+                                <div style="display: flex; justify-content: between; gap: 12px;">
+                                    <div style="flex: 1;">
+                                        <div style="font-weight: 600; margin-bottom: 4px;">${item.name}</div>
+                                        <div style="font-size: 12px; color: var(--text-tertiary); margin-bottom: 8px;">
+                                            ${item.category} • ${item.color} • ${item.formality}
+                                        </div>
+                                        ${item.style ? `
+                                            <div style="font-size: 13px; color: var(--text-secondary);">
+                                                ${item.style}
+                                            </div>
+                                        ` : ''}
+                                    </div>
+                                    <button class="btn btn-ghost" onclick="App.deleteWardrobeItem('${item.id}')"
+                                            style="padding: 8px; height: fit-content;">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 20px; height: 20px;">
+                                            <polyline points="3 6 5 6 21 6"></polyline>
+                                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        `).join('')}
+                    ` : `
+                        <div class="empty-state mt-xl">
+                            <div class="empty-state-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="12" cy="7" r="4"></circle>
+                                </svg>
+                            </div>
+                            <h3 class="empty-state-title">No items yet</h3>
+                            <p class="empty-state-text">Start building your wardrobe by adding items</p>
+                            <button class="btn btn-primary" onclick="App.navigate('add-wardrobe-item')">
+                                Add First Item
+                            </button>
+                        </div>
+                    `}
+                </div>
+            </div>
+        `;
+    },
+
+    initWardrobe() {
+        const filterBtns = document.querySelectorAll('.chip[data-category]');
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Update active state
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                // Filter items
+                const category = btn.dataset.category;
+                const items = document.querySelectorAll('.wardrobe-item');
+                items.forEach(item => {
+                    if (category === 'all' || item.dataset.category === category) {
+                        item.style.display = 'block';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            });
+        });
+    },
+
+    deleteWardrobeItem(id) {
+        if (confirm('Remove this item from your wardrobe?')) {
+            Storage.deleteWardrobeItem(id);
+            this.render();
+        }
     }
 };
 

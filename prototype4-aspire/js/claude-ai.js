@@ -67,6 +67,53 @@ NOW RESPOND WITH ONLY THE JSON:`;
         }
     },
 
+    // Detect multiple clothing items from a single image
+    async detectMultipleItems(imageData) {
+        const textPrompt = `TASK: Analyze this image and detect ALL visible clothing items.
+
+CRITICAL: Look carefully at the image and identify EVERY piece of clothing you can see. Do not give generic responses. Describe what you ACTUALLY see in THIS specific image.
+
+Return a JSON array of all items found. Each item must have:
+{
+  "name": "specific descriptive name",
+  "category": "top|bottom|shoes|accessory|outerwear",
+  "color": "actual color you see",
+  "style": "specific style description",
+  "formality": "casual|business casual|formal",
+  "season": "all|spring|summer|fall|winter"
+}
+
+Example response:
+[
+  {
+    "name": "Navy Blue Blazer",
+    "category": "outerwear",
+    "color": "navy blue",
+    "style": "tailored, professional",
+    "formality": "business casual",
+    "season": "all"
+  },
+  {
+    "name": "White Oxford Shirt",
+    "category": "top",
+    "color": "white",
+    "style": "classic, button-down",
+    "formality": "business casual",
+    "season": "all"
+  }
+]
+
+RESPOND WITH ONLY THE JSON ARRAY:`;
+
+        try {
+            const response = await this.callAPIWithVision(textPrompt, imageData, 'You are a clothing detection API. Analyze images and return ONLY a JSON array of detected items. Be specific and accurate about what you see. Never return generic placeholders.');
+            return JSON.parse(this.cleanJSON(response));
+        } catch (error) {
+            console.error('Error detecting multiple items:', error);
+            throw error;
+        }
+    },
+
     // Calculate alignment scores
     async calculateAlignment(identity, wardrobe, recentBehavior) {
         const wardrobeList = wardrobe.map(item => 
