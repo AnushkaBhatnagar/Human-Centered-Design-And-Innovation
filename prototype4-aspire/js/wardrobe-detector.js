@@ -5,7 +5,7 @@ const WardrobeDetector = {
         const loading = ClaudeAI.showLoading('Analyzing item...');
         
         try {
-            const detected = await ClaudeAI.detectWardrobeItem(description, imageData !== null);
+            const detected = await ClaudeAI.detectWardrobeItem(description, imageData);
             
             const item = {
                 name: detected.name,
