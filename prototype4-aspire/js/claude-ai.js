@@ -28,12 +28,9 @@ Create an identity archetype profile. Output ONLY valid JSON, no other text or e
         }
     },
 
-    // Auto-detect wardrobe items from description
-    async detectWardrobeItem(description, imageAvailable = false) {
-        const prompt = `DESCRIPTION: ${description}
-${imageAvailable ? 'IMAGE: Provided' : ''}
-
-Extract structured information. Output ONLY valid JSON, no other text.
+    // Auto-detect wardrobe items from image and/or description
+    async detectWardrobeItem(description, imageData = null) {
+        const textPrompt = `${description ? `DESCRIPTION: ${description}\n\n` : ''}Analyze this clothing item and extract structured information. Output ONLY valid JSON, no other text.
 
 {
   "name": "item name",
@@ -45,7 +42,7 @@ Extract structured information. Output ONLY valid JSON, no other text.
 }`;
 
         try {
-            const response = await this.callAPI(prompt, 'You are a JSON-only API. Respond with valid JSON only, no markdown, no explanations, no other text.');
+            const response = await this.callAPIWithVision(textPrompt, imageData, 'You are a JSON-only API. Respond with valid JSON only, no markdown, no explanations, no other text.');
             return JSON.parse(this.cleanJSON(response));
         } catch (error) {
             console.error('Error detecting item:', error);
@@ -207,6 +204,68 @@ Generate 3-5 recommendations. Output ONLY valid JSON array, no other text.
         } catch (error) {
             console.error('Error generating recommendations:', error);
             throw error;
+        }
+    },
+
+    // Call Claude API with vision support
+    async callAPIWithVision(textPrompt, imageData = null, systemMessage = 'You are a personal style advisor for the Aspire app, helping users align their wardrobe with their aspirational identity. Be specific, actionable, and encouraging.') {
+        console.log('🤖 Calling Claude Vision API...');
+        
+        try {
+            // Build content array with image and text
+            const content = [];
+            
+            // Add image if provided
+            if (imageData) {
+                // Extract base64 data and media type
+                const matches = imageData.match(/^data:(.+);base64,(.+)$/);
+                if (matches) {
+                    const mediaType = matches[1];
+                    const base64Data = matches[2];
+                    
+                    content.push({
+                        type: 'image',
+                        source: {
+                            type: 'base64',
+                            media_type: mediaType,
+                            data: base64Data
+                        }
+                    });
+                }
+            }
+            
+            // Add text prompt
+            content.push({
+                type: 'text',
+                text: textPrompt
+            });
+            
+            const response = await fetch(this.API_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    messages: [{
+                        role: 'user',
+                        content: content
+                    }],
+                    system: systemMessage,
+                    max_tokens: 2048
+                })
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(`API request failed: ${response.status} ${errorText}`);
+            }
+
+            const data = await response.json();
+            console.log('✅ Vision API Success');
+            return data.content[0].text;
+        } catch (error) {
+            console.error('❌ Vision API Error:', error);
+            throw new Error(`Failed to connect to AI service: ${error.message}`);
         }
     },
 

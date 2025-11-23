@@ -839,15 +839,18 @@ const App = {
                         </svg>
                     </div>
                     <div class="upload-text">Upload item photo</div>
-                    <div class="upload-hint">Optional</div>
+                    <div class="upload-hint">AI will auto-detect the item</div>
                 </div>
 
                 <div id="itemImagePreview"></div>
 
                 <div class="form-group">
-                    <label class="form-label">Describe this item</label>
+                    <label class="form-label">Description (Optional)</label>
                     <textarea id="itemDescription" class="form-textarea" 
-                              placeholder="e.g., black turtleneck sweater, wool blend, fitted"></textarea>
+                              placeholder="Add details to help AI identify the item better (optional)"></textarea>
+                    <p style="font-size: 12px; color: var(--text-tertiary); margin-top: 8px;">
+                        💡 Upload an image and AI will automatically detect the item type, color, and style!
+                    </p>
                 </div>
 
                 <button id="addItemBtn" class="btn btn-primary btn-full">
@@ -885,8 +888,9 @@ const App = {
         addBtn.addEventListener('click', async () => {
             const description = document.getElementById('itemDescription').value.trim();
 
-            if (!description) {
-                alert('Please describe the item');
+            // Require either image or description
+            if (!imageData && !description) {
+                alert('Please upload an image or provide a description');
                 return;
             }
 
