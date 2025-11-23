@@ -30,19 +30,36 @@ Create an identity archetype profile. Output ONLY valid JSON, no other text or e
 
     // Auto-detect wardrobe items from image and/or description
     async detectWardrobeItem(description, imageData = null) {
-        const textPrompt = `${description ? `DESCRIPTION: ${description}\n\n` : ''}Analyze this clothing item and extract structured information. Output ONLY valid JSON, no other text.
+        const hasImage = imageData && typeof imageData === 'string';
+        
+        const textPrompt = `${description ? `USER DESCRIPTION: ${description}\n\n` : ''}${!hasImage ? 'NOTE: No image provided. Infer details from description.\n\n' : ''}TASK: Analyze this clothing item and extract structured information.
 
+CRITICAL REQUIREMENT: You MUST respond with ONLY the JSON object below. Do not include any explanatory text, markdown formatting, or conversational responses. Return ONLY the JSON.
+
+Required JSON format:
 {
-  "name": "item name",
+  "name": "descriptive item name",
   "category": "top|bottom|shoes|accessory|outerwear",
   "color": "primary color",
-  "style": "style description",
+  "style": "style description (e.g., casual, formal, streetwear)",
   "formality": "casual|business casual|formal",
   "season": "all|spring|summer|fall|winter"
-}`;
+}
+
+Example valid response:
+{
+  "name": "Black Leather Jacket",
+  "category": "outerwear",
+  "color": "black",
+  "style": "edgy, biker-inspired",
+  "formality": "casual",
+  "season": "fall"
+}
+
+NOW RESPOND WITH ONLY THE JSON:`;
 
         try {
-            const response = await this.callAPIWithVision(textPrompt, imageData, 'You are a JSON-only API. Respond with valid JSON only, no markdown, no explanations, no other text.');
+            const response = await this.callAPIWithVision(textPrompt, imageData, 'You are a JSON extraction API. You MUST respond with ONLY valid JSON. Never include explanations, apologies, or conversational text. If you cannot determine a field, make a reasonable inference. Output pure JSON only.');
             return JSON.parse(this.cleanJSON(response));
         } catch (error) {
             console.error('Error detecting item:', error);
