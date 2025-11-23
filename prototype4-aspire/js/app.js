@@ -104,9 +104,12 @@ const App = {
         return `
             <div class="fade-in">
                 <div class="text-center mb-2xl" style="margin-top: 80px;">
-                    <h1 style="font-size: 48px; margin-bottom: 16px;">ASPIRE</h1>
-                    <p style="font-size: 16px; line-height: 1.6;">
-                        Welcome. Tell us who you want to become — and we'll help your wardrobe evolve into it.
+                    <h1 style="font-size: 48px; margin-bottom: 24px;">ASPIRE</h1>
+                    <p style="font-size: 18px; line-height: 1.6; margin-bottom: 12px; font-weight: 500;">
+                        Identity first. Wardrobe follows.
+                    </p>
+                    <p style="font-size: 15px; line-height: 1.6; color: var(--text-secondary);">
+                        Tell us who you aspire to be.
                     </p>
                 </div>
 
