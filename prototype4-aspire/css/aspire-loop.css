@@ -501,16 +501,115 @@ p {
     }
 }
 
-/* Responsive */
+/* Mobile App-Like Experience */
 @media (max-width: 480px) {
     body {
         padding: 0;
+        background: var(--bg-primary);
+    }
+    
+    .phone-container {
+        width: 100vw;
+        height: 100vh;
+        height: 100svh; /* Small viewport height - accounts for mobile browser UI */
     }
     
     .phone-frame {
-        width: 100vw;
-        height: 100vh;
+        width: 100%;
+        height: 100%;
         border-radius: 0;
         box-shadow: none;
+        zoom: 1; /* Remove zoom on mobile */
+    }
+    
+    /* App-like touch interactions */
+    * {
+        -webkit-tap-highlight-color: transparent;
+        -webkit-touch-callout: none;
+    }
+    
+    /* Smooth scrolling */
+    .app-content {
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior-y: contain;
+    }
+    
+    /* Better mobile spacing */
+    .app-content {
+        padding: var(--spacing-md) 0;
+        padding-bottom: 100px;
+    }
+    
+    /* Cards full width with side margins */
+    .card {
+        margin-left: var(--spacing-md);
+        margin-right: var(--spacing-md);
+    }
+    
+    /* Larger touch targets */
+    .btn {
+        min-height: 48px;
+        padding: 16px 24px;
+        font-size: 16px;
+    }
+    
+    .nav-item {
+        min-width: 48px;
+        min-height: 48px;
+    }
+    
+    /* iOS-style safe area */
+    .bottom-nav {
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+        height: calc(80px + env(safe-area-inset-bottom, 0px));
+    }
+    
+    /* Better form inputs for mobile */
+    .form-input,
+    .form-textarea {
+        font-size: 16px; /* Prevents iOS zoom on focus */
+        padding: 16px;
+    }
+    
+    /* Smoother animations */
+    .card,
+    .btn,
+    .nav-item {
+        transform: translate3d(0, 0, 0); /* GPU acceleration */
+    }
+    
+    /* Full bleed for special cards */
+    .card-accent {
+        margin-left: 0;
+        margin-right: 0;
+        border-radius: 0;
+    }
+    
+    /* Typography adjustments */
+    h1 {
+        font-size: 32px;
+    }
+    
+    h2 {
+        font-size: 24px;
+    }
+    
+    /* Optimize images */
+    img {
+        -webkit-user-drag: none;
+        user-select: none;
+    }
+}
+
+/* Small phones */
+@media (max-width: 375px) {
+    .app-content {
+        padding: var(--spacing-sm) 0;
+    }
+    
+    .card {
+        margin-left: var(--spacing-sm);
+        margin-right: var(--spacing-sm);
+        padding: var(--spacing-md);
     }
 }
