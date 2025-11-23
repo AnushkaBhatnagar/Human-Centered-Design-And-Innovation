@@ -215,8 +215,8 @@ Generate 3-5 recommendations. Output ONLY valid JSON array, no other text.
             // Build content array with image and text
             const content = [];
             
-            // Add image if provided
-            if (imageData) {
+            // Add image if provided and valid
+            if (imageData && typeof imageData === 'string') {
                 // Extract base64 data and media type
                 const matches = imageData.match(/^data:(.+);base64,(.+)$/);
                 if (matches) {
@@ -231,6 +231,9 @@ Generate 3-5 recommendations. Output ONLY valid JSON array, no other text.
                             data: base64Data
                         }
                     });
+                    console.log('✅ Image added to request');
+                } else {
+                    console.warn('⚠️ Image data format invalid, skipping image');
                 }
             }
             
