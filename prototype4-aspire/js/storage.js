@@ -114,8 +114,8 @@ const Storage = {
             lastWorn: null
         };
         data.wardrobe.items.push(newItem);
-        this.saveData(data);
-        return newItem;
+        const saved = this.saveData(data);
+        return saved ? newItem : null;
     },
 
     getWardrobeItems() {

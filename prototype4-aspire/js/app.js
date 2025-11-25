@@ -991,10 +991,15 @@ const App = {
         const checkboxes = document.querySelectorAll('.item-checkbox:checked');
         const selectedIndexes = Array.from(checkboxes).map(cb => parseInt(cb.dataset.index));
         
+        let successCount = 0;
+        let failCount = 0;
+        
         selectedIndexes.forEach(index => {
             const item = this.detectedItems[index];
+            console.log(`Attempting to add item ${index + 1}:`, item.name);
+            
             // Create clean object without sourceImage property to avoid duplication
-            Storage.addWardrobeItem({
+            const result = Storage.addWardrobeItem({
                 name: item.name,
                 category: item.category,
                 color: item.color,
@@ -1005,9 +1010,24 @@ const App = {
                 source: 'ai-detected',
                 confirmed: true
             });
+            
+            if (result) {
+                successCount++;
+                console.log(`✓ Successfully added: ${item.name}`);
+            } else {
+                failCount++;
+                console.error(`✗ Failed to add: ${item.name}`);
+            }
         });
 
-        alert(`Added ${selectedIndexes.length} items to your wardrobe!`);
+        console.log(`Summary: ${successCount} succeeded, ${failCount} failed`);
+        
+        if (failCount > 0) {
+            alert(`Added ${successCount} items. ${failCount} failed due to storage limits. Try uploading fewer items at once.`);
+        } else {
+            alert(`Added ${successCount} items to your wardrobe!`);
+        }
+        
         this.navigate('wardrobe');
     },
 
