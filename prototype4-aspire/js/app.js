@@ -947,11 +947,12 @@ const App = {
             // Process each image and store source image with items
             for (let i = 0; i < this.selectedImages.length; i++) {
                 const items = await ClaudeAI.detectMultipleItems(this.selectedImages[i]);
-                // Add source image to each detected item
-                items.forEach(item => {
-                    item.sourceImage = this.selectedImages[i];
-                });
-                this.detectedItems.push(...items);
+                // Create new objects with source image for each detected item
+                const itemsWithSource = items.map(item => ({
+                    ...item,
+                    sourceImage: this.selectedImages[i]
+                }));
+                this.detectedItems.push(...itemsWithSource);
             }
 
             ClaudeAI.hideLoading(loading);
