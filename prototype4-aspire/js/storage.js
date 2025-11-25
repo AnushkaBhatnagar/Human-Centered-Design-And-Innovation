@@ -15,6 +15,7 @@ const Storage = {
                 keywords: [],
                 archetype: null
             },
+            images: {}, // Store unique images with IDs
             wardrobe: {
                 items: []
             },
@@ -102,6 +103,42 @@ const Storage = {
 
     getIdentity() {
         return this.getData().identity;
+    },
+
+    // Image methods
+    addImage(imageData) {
+        const data = this.getData();
+        if (!data.images) data.images = {};
+        
+        const imageId = this.generateId();
+        data.images[imageId] = imageData;
+        const saved = this.saveData(data);
+        return saved ? imageId : null;
+    },
+
+    getImage(imageId) {
+        const data = this.getData();
+        return data.images?.[imageId] || null;
+    },
+
+    deleteUnusedImages() {
+        const data = this.getData();
+        if (!data.images) return;
+        
+        // Collect all imageIds in use
+        const usedImageIds = new Set();
+        data.wardrobe.items.forEach(item => {
+            if (item.imageId) usedImageIds.add(item.imageId);
+        });
+        
+        // Delete unused images
+        Object.keys(data.images).forEach(imageId => {
+            if (!usedImageIds.has(imageId)) {
+                delete data.images[imageId];
+            }
+        });
+        
+        this.saveData(data);
     },
 
     // Wardrobe methods

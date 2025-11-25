@@ -994,11 +994,33 @@ const App = {
         let successCount = 0;
         let failCount = 0;
         
+        // Store unique images first and create a mapping
+        const imageMap = new Map(); // sourceImage -> imageId
+        
+        selectedIndexes.forEach(index => {
+            const item = this.detectedItems[index];
+            const sourceImage = item.sourceImage;
+            
+            // Only store image if we haven't seen it before
+            if (sourceImage && !imageMap.has(sourceImage)) {
+                console.log(`Storing unique image for items...`);
+                const imageId = Storage.addImage(sourceImage);
+                if (imageId) {
+                    imageMap.set(sourceImage, imageId);
+                } else {
+                    console.error('Failed to store image');
+                }
+            }
+        });
+        
+        // Now add items with imageId references
         selectedIndexes.forEach(index => {
             const item = this.detectedItems[index];
             console.log(`Attempting to add item ${index + 1}:`, item.name);
             
-            // Create clean object without sourceImage property to avoid duplication
+            const imageId = imageMap.get(item.sourceImage);
+            
+            // Create clean object with imageId reference instead of full image
             const result = Storage.addWardrobeItem({
                 name: item.name,
                 category: item.category,
@@ -1006,7 +1028,7 @@ const App = {
                 formality: item.formality,
                 style: item.style,
                 season: item.season,
-                imageData: item.sourceImage, // Store the source image
+                imageId: imageId, // Reference to stored image
                 source: 'ai-detected',
                 confirmed: true
             });
@@ -1020,10 +1042,10 @@ const App = {
             }
         });
 
-        console.log(`Summary: ${successCount} succeeded, ${failCount} failed`);
+        console.log(`Summary: ${successCount} succeeded, ${failCount} failed out of ${selectedIndexes.length}`);
         
         if (failCount > 0) {
-            alert(`Added ${successCount} items. ${failCount} failed due to storage limits. Try uploading fewer items at once.`);
+            alert(`Added ${successCount} items. ${failCount} failed due to storage limits.`);
         } else {
             alert(`Added ${successCount} items to your wardrobe!`);
         }
@@ -1059,11 +1081,13 @@ const App = {
 
                 <div id="wardrobeGrid">
                     ${wardrobe.length > 0 ? `
-                        ${wardrobe.map(item => `
+                        ${wardrobe.map(item => {
+                            const imageData = item.imageId ? Storage.getImage(item.imageId) : item.imageData;
+                            return `
                             <div class="card mb-sm wardrobe-item" data-category="${item.category}">
                                 <div style="display: flex; gap: 12px; align-items: center;">
-                                    ${item.imageData ? `
-                                        <img src="${item.imageData}" 
+                                    ${imageData ? `
+                                        <img src="${imageData}" 
                                              style="width: 80px; height: 80px; object-fit: cover; border-radius: 12px; flex-shrink: 0;" />
                                     ` : `
                                         <div style="width: 80px; height: 80px; background: var(--bg-tertiary); border-radius: 12px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 32px;">
@@ -1090,7 +1114,8 @@ const App = {
                                     </button>
                                 </div>
                             </div>
-                        `).join('')}
+                        `;
+                        }).join('')}
                     ` : `
                         <div class="empty-state mt-xl">
                             <div class="empty-state-icon">
@@ -1172,10 +1197,12 @@ const App = {
                                     <div class="mb-md">
                                         <div style="font-size: 12px; text-transform: uppercase; letter-spacing: 1px; 
                                                     color: var(--text-tertiary); margin-bottom: 8px;">Items</div>
-                                        ${items.map(item => `
+                                        ${items.map(item => {
+                                            const imageData = item.imageId ? Storage.getImage(item.imageId) : item.imageData;
+                                            return `
                                             <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 8px;">
-                                                ${item.imageData ? `
-                                                    <img src="${item.imageData}" 
+                                                ${imageData ? `
+                                                    <img src="${imageData}" 
                                                          style="width: 40px; height: 40px; object-fit: cover; border-radius: 8px;" />
                                                 ` : ''}
                                                 <div>
@@ -1185,7 +1212,8 @@ const App = {
                                                     </div>
                                                 </div>
                                             </div>
-                                        `).join('')}
+                                        `;
+                                        }).join('')}
                                     </div>
                                 ` : ''}
                                 
