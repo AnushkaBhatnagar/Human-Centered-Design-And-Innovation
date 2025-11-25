@@ -98,6 +98,10 @@ const App = {
                 app.innerHTML = this.renderWardrobe();
                 this.initWardrobe();
                 break;
+            case 'outfits':
+                app.innerHTML = this.renderOutfits();
+                this.initOutfits();
+                break;
             default:
                 app.innerHTML = this.renderDashboard();
         }
@@ -283,13 +287,13 @@ const App = {
                             style="padding: 16px; font-size: 14px;">
                         👕 Add Item
                     </button>
-                    <button class="btn btn-secondary" onclick="App.generateOutfit()"
+                    <button class="btn btn-secondary" onclick="App.navigate('wardrobe')"
                             style="padding: 16px; font-size: 14px;">
-                        ✨ Generate Outfit
+                        👗 Wardrobe
                     </button>
-                    <button class="btn btn-secondary" onclick="App.getRecommendations()"
+                    <button class="btn btn-secondary" onclick="App.navigate('outfits')"
                             style="padding: 16px; font-size: 14px;">
-                        💡 Get Tips
+                        ✨ Outfits
                     </button>
                 </div>
 
@@ -940,9 +944,13 @@ const App = {
         this.detectedItems = [];
 
         try {
-            // Process each image
+            // Process each image and store source image with items
             for (let i = 0; i < this.selectedImages.length; i++) {
                 const items = await ClaudeAI.detectMultipleItems(this.selectedImages[i]);
+                // Add source image to each detected item
+                items.forEach(item => {
+                    item.sourceImage = this.selectedImages[i];
+                });
                 this.detectedItems.push(...items);
             }
 
@@ -986,7 +994,7 @@ const App = {
             const item = this.detectedItems[index];
             Storage.addWardrobeItem({
                 ...item,
-                imageData: null,
+                imageData: item.sourceImage, // Store the source image
                 source: 'ai-detected',
                 confirmed: true
             });
@@ -1026,8 +1034,16 @@ const App = {
                     ${wardrobe.length > 0 ? `
                         ${wardrobe.map(item => `
                             <div class="card mb-sm wardrobe-item" data-category="${item.category}">
-                                <div style="display: flex; justify-content: between; gap: 12px;">
-                                    <div style="flex: 1;">
+                                <div style="display: flex; gap: 12px; align-items: center;">
+                                    ${item.imageData ? `
+                                        <img src="${item.imageData}" 
+                                             style="width: 80px; height: 80px; object-fit: cover; border-radius: 12px; flex-shrink: 0;" />
+                                    ` : `
+                                        <div style="width: 80px; height: 80px; background: var(--bg-tertiary); border-radius: 12px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 32px;">
+                                            👕
+                                        </div>
+                                    `}
+                                    <div style="flex: 1; min-width: 0;">
                                         <div style="font-weight: 600; margin-bottom: 4px;">${item.name}</div>
                                         <div style="font-size: 12px; color: var(--text-tertiary); margin-bottom: 8px;">
                                             ${item.category} • ${item.color} • ${item.formality}
@@ -1039,7 +1055,7 @@ const App = {
                                         ` : ''}
                                     </div>
                                     <button class="btn btn-ghost" onclick="App.deleteWardrobeItem('${item.id}')"
-                                            style="padding: 8px; height: fit-content;">
+                                            style="padding: 8px; height: fit-content; flex-shrink: 0;">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 20px; height: 20px;">
                                             <polyline points="3 6 5 6 21 6"></polyline>
                                             <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
@@ -1093,6 +1109,113 @@ const App = {
     deleteWardrobeItem(id) {
         if (confirm('Remove this item from your wardrobe?')) {
             Storage.deleteWardrobeItem(id);
+            this.render();
+        }
+    },
+
+    // OUTFITS VIEW PAGE
+    renderOutfits() {
+        const outfits = Storage.getOutfits();
+        const wardrobe = Storage.getWardrobeItems();
+
+        return `
+            <div class="fade-in">
+                <div class="flex justify-between items-center mb-lg">
+                    <h2>Your Outfits</h2>
+                    <button class="btn btn-primary" onclick="App.generateOutfit()">
+                        + Generate
+                    </button>
+                </div>
+
+                <p class="mb-lg" style="color: var(--text-secondary);">
+                    ${outfits.length} ${outfits.length === 1 ? 'outfit' : 'outfits'} created
+                </p>
+
+                ${outfits.length > 0 ? `
+                    ${outfits.map(outfit => {
+                        const items = outfit.itemIds?.map(id => wardrobe.find(w => w.id === id)).filter(i => i) || [];
+                        return `
+                            <div class="card mb-md">
+                                <div class="flex justify-between items-center mb-md">
+                                    <h4>${outfit.name}</h4>
+                                    <div class="badge badge-gold">${outfit.alignmentScore}%</div>
+                                </div>
+                                
+                                ${items.length > 0 ? `
+                                    <div class="mb-md">
+                                        <div style="font-size: 12px; text-transform: uppercase; letter-spacing: 1px; 
+                                                    color: var(--text-tertiary); margin-bottom: 8px;">Items</div>
+                                        ${items.map(item => `
+                                            <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 8px;">
+                                                ${item.imageData ? `
+                                                    <img src="${item.imageData}" 
+                                                         style="width: 40px; height: 40px; object-fit: cover; border-radius: 8px;" />
+                                                ` : ''}
+                                                <div>
+                                                    <div style="font-size: 14px; font-weight: 600;">${item.name}</div>
+                                                    <div style="font-size: 11px; color: var(--text-tertiary);">
+                                                        ${item.category} • ${item.color}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        `).join('')}
+                                    </div>
+                                ` : ''}
+                                
+                                ${outfit.reason ? `
+                                    <div class="mb-md">
+                                        <div style="font-size: 12px; text-transform: uppercase; letter-spacing: 1px; 
+                                                    color: var(--text-tertiary); margin-bottom: 8px;">Why it works</div>
+                                        <p style="font-size: 14px; line-height: 1.6;">${outfit.reason}</p>
+                                    </div>
+                                ` : ''}
+                                
+                                ${outfit.stylingTips ? `
+                                    <div class="mb-md">
+                                        <div style="font-size: 12px; text-transform: uppercase; letter-spacing: 1px; 
+                                                    color: var(--text-tertiary); margin-bottom: 8px;">Styling Tips</div>
+                                        <p style="font-size: 14px; line-height: 1.6;">${outfit.stylingTips}</p>
+                                    </div>
+                                ` : ''}
+                                
+                                <button class="btn btn-ghost btn-full" onclick="App.deleteOutfit('${outfit.id}')">
+                                    Delete Outfit
+                                </button>
+                            </div>
+                        `;
+                    }).join('')}
+                ` : `
+                    <div class="empty-state mt-xl">
+                        <div class="empty-state-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="12" cy="7" r="4"></circle>
+                            </svg>
+                        </div>
+                        <h3 class="empty-state-title">No outfits yet</h3>
+                        <p class="empty-state-text">Generate AI-curated outfits from your wardrobe</p>
+                        ${wardrobe.length > 0 ? `
+                            <button class="btn btn-primary" onclick="App.generateOutfit()">
+                                Generate First Outfit
+                            </button>
+                        ` : `
+                            <button class="btn btn-primary" onclick="App.navigate('add-wardrobe-item')">
+                                Add Wardrobe Items First
+                            </button>
+                        `}
+                    </div>
+                `}
+            </div>
+        `;
+    },
+
+    initOutfits() {
+        // Outfits page loaded
+    },
+
+    deleteOutfit(id) {
+        if (confirm('Delete this outfit?')) {
+            Storage.deleteOutfit(id);
             this.render();
         }
     }
