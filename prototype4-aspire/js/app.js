@@ -993,8 +993,14 @@ const App = {
         
         selectedIndexes.forEach(index => {
             const item = this.detectedItems[index];
+            // Create clean object without sourceImage property to avoid duplication
             Storage.addWardrobeItem({
-                ...item,
+                name: item.name,
+                category: item.category,
+                color: item.color,
+                formality: item.formality,
+                style: item.style,
+                season: item.season,
                 imageData: item.sourceImage, // Store the source image
                 source: 'ai-detected',
                 confirmed: true
