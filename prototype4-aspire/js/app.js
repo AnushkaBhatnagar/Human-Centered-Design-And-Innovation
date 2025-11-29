@@ -288,7 +288,7 @@ const App = {
         this.aspirationKeywords = this.aspirationKeywords || [];
         
         // Restore previous color picker state or use defaults
-        this.currentColorPicker = this.currentColorPicker || { hex: '#FF0000', opacity: 100 };
+        this.currentColorPicker = this.currentColorPicker || { hex: '#000000', opacity: 0 };
         
         // Style card selection
         const styleCards = document.querySelectorAll('.style-card');
@@ -357,10 +357,10 @@ const App = {
             
             if (!this.selectedColors.includes(rgba)) {
                 this.selectedColors.push(rgba);
-                // Generate a new random color for next selection
+                // Reset to transparent for next selection
                 this.currentColorPicker = {
-                    hex: '#' + Math.floor(Math.random()*16777215).toString(16).padStart(6, '0'),
-                    opacity: 100
+                    hex: '#000000',
+                    opacity: 0
                 };
                 this.render(); // Re-render to show new color
             }
