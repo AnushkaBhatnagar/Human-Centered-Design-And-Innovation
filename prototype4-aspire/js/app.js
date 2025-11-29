@@ -212,10 +212,10 @@ const App = {
                         </div>
                         <div style="flex: 1;">
                             <label style="font-size: 12px; color: var(--text-tertiary); display: block; margin-bottom: 8px;">Opacity</label>
-                            <input type="range" id="colorOpacity" min="0" max="100" value="100" 
+                            <input type="range" id="colorOpacity" min="0" max="100" value="0" 
                                    style="width: 100%; height: 50px; cursor: pointer;" />
                             <div style="text-align: center; font-size: 12px; color: var(--text-secondary); margin-top: 4px;">
-                                <span id="opacityValue">100</span>%
+                                <span id="opacityValue">0</span>%
                             </div>
                         </div>
                     </div>
@@ -334,7 +334,7 @@ const App = {
             const b = parseInt(hex.slice(5, 7), 16);
             
             const rgba = `rgba(${r}, ${g}, ${b}, ${opacity})`;
-            colorPreview.style.background = rgba;
+            colorPreview.style.backgroundColor = rgba;
             colorValue.textContent = rgba;
         };
         
