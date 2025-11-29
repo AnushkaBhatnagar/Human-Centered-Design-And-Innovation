@@ -221,10 +221,10 @@ const App = {
                     </div>
                     
                     <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px; padding: 12px; background: var(--bg-tertiary); border-radius: 8px;">
-                        <div id="colorPreview" style="width: 50px; height: 50px; border-radius: 8px; border: 2px solid rgba(255,255,255,0.1); background: rgba(0,0,0,1);"></div>
+                        <div id="colorPreview" style="width: 50px; height: 50px; border-radius: 8px; border: 2px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0);"></div>
                         <div style="flex: 1;">
                             <div style="font-size: 11px; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px;">Preview</div>
-                            <div id="colorValue" style="font-family: monospace; font-size: 13px; color: var(--text-primary);">rgba(0, 0, 0, 1)</div>
+                            <div id="colorValue" style="font-family: monospace; font-size: 13px; color: var(--text-primary);">rgba(0, 0, 0, 0)</div>
                         </div>
                     </div>
                     
