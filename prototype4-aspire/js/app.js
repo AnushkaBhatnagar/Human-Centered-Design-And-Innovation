@@ -212,10 +212,10 @@ const App = {
                         </div>
                         <div style="flex: 1;">
                             <label style="font-size: 12px; color: var(--text-tertiary); display: block; margin-bottom: 8px;">Opacity</label>
-                            <input type="range" id="colorOpacity" min="0" max="100" value="0" 
+                            <input type="range" id="colorOpacity" min="0" max="100" value="100" 
                                    style="width: 100%; height: 50px; cursor: pointer;" />
                             <div style="text-align: center; font-size: 12px; color: var(--text-secondary); margin-top: 4px;">
-                                <span id="opacityValue">0</span>%
+                                <span id="opacityValue">100</span>%
                             </div>
                         </div>
                     </div>
@@ -224,7 +224,7 @@ const App = {
                         <div id="colorPreview" style="width: 50px; height: 50px; border-radius: 8px; border: 2px solid rgba(255,255,255,0.1);"></div>
                         <div style="flex: 1;">
                             <div style="font-size: 11px; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px;">Preview</div>
-                            <div id="colorValue" style="font-family: monospace; font-size: 13px; color: var(--text-primary);">rgba(0, 0, 0, 0)</div>
+                            <div id="colorValue" style="font-family: monospace; font-size: 13px; color: var(--text-primary);">rgba(0, 0, 0, 1)</div>
                         </div>
                     </div>
                     
@@ -288,7 +288,7 @@ const App = {
         this.aspirationKeywords = this.aspirationKeywords || [];
         
         // Restore previous color picker state or use defaults
-        this.currentColorPicker = this.currentColorPicker || { hex: '#000000', opacity: 0 };
+        this.currentColorPicker = this.currentColorPicker || { hex: '#000000', opacity: 100 };
         
         // Style card selection
         const styleCards = document.querySelectorAll('.style-card');
@@ -360,7 +360,7 @@ const App = {
                 // Reset to transparent for next selection
                 this.currentColorPicker = {
                     hex: '#000000',
-                    opacity: 0
+                    opacity: 100
                 };
                 this.render(); // Re-render to show new color
             }
@@ -2970,7 +2970,7 @@ const App = {
         this.editingAspiration = aspiration; // Store for later
         
         // Initialize separate color picker state for edit forms
-        this.editingColorPicker = this.editingColorPicker || { hex: '#000000', opacity: 0 };
+        this.editingColorPicker = this.editingColorPicker || { hex: '#000000', opacity: 100 };
         
         // Style selection
         const styleCards = document.querySelectorAll('.style-card');
