@@ -1,7 +1,7 @@
 // Behavior Tracking Engine
 const BehaviorTracker = {
     // Add daily log
-    async addLog(selfieData, itemIds) {
+    async addLog(selfieData, itemIds, aspirationId = null) {
         const identity = Storage.getIdentity();
         const items = itemIds.map(id => Storage.getWardrobeItemById(id)).filter(i => i);
 
@@ -13,6 +13,7 @@ const BehaviorTracker = {
             const log = {
                 selfieData: selfieData,
                 itemsWorn: itemIds,
+                aspirationId: aspirationId, // Track which aspiration user was aiming for
                 extractedData: {
                     colors: analysis.colors,
                     silhouette: analysis.silhouette,

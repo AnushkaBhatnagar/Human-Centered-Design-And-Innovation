@@ -15,6 +15,8 @@ const Storage = {
                 keywords: [],
                 archetype: null
             },
+            aspirations: [], // Array of aspirations
+            styleInsights: {}, // Cache for style insights per aspiration
             images: {}, // Store unique images with IDs
             wardrobe: {
                 items: []
@@ -51,12 +53,166 @@ const Storage = {
     // Save all data
     saveData(data) {
         try {
-            localStorage.setItem(this.STORAGE_KEY, JSON.stringify(data));
+            localStorage.setItem('aspire_loop_data', JSON.stringify(data));
             return true;
         } catch (e) {
             console.error('Error saving data:', e);
             return false;
         }
+    },
+
+    // Aspiration methods (multiple aspirations support)
+    addAspiration(aspirationData) {
+        const data = this.getData();
+        if (!data.aspirations) data.aspirations = [];
+        
+        const newAspiration = {
+            id: this.generateId(),
+            name: aspirationData.name || 'Untitled Aspiration',
+            styles: aspirationData.styles || [],
+            colors: aspirationData.colors || [],
+            keywords: aspirationData.keywords || [],
+            createdAt: Date.now()
+        };
+        
+        data.aspirations.push(newAspiration);
+        this.saveData(data);
+        return newAspiration;
+    },
+
+    getAspirations() {
+        const data = this.getData();
+        if (!data.aspirations) data.aspirations = [];
+        return data.aspirations;
+    },
+
+    getAspirationById(id) {
+        const aspirations = this.getAspirations();
+        return aspirations.find(asp => asp.id === id);
+    },
+
+    updateAspiration(id, updates) {
+        const data = this.getData();
+        if (!data.aspirations) data.aspirations = [];
+        
+        const index = data.aspirations.findIndex(asp => asp.id === id);
+        if (index !== -1) {
+            data.aspirations[index] = {
+                ...data.aspirations[index],
+                ...updates,
+                updatedAt: Date.now()
+            };
+            this.saveData(data);
+            return data.aspirations[index];
+        }
+        return null;
+    },
+
+    deleteAspiration(id) {
+        const data = this.getData();
+        if (!data.aspirations) return false;
+        
+        data.aspirations = data.aspirations.filter(asp => asp.id !== id);
+        
+        // Clean up style insights for this aspiration
+        if (data.styleInsights && data.styleInsights[id]) {
+            delete data.styleInsights[id];
+        }
+        
+        // Clean up wardrobe item analysis results for this aspiration
+        data.wardrobe.items.forEach(item => {
+            if (item.analysisResults && item.analysisResults[id]) {
+                delete item.analysisResults[id];
+            }
+        });
+        
+        this.saveData(data);
+        return true;
+    },
+
+    // Backward compatibility - save first aspiration
+    saveAspiration(aspirationData) {
+        const data = this.getData();
+        if (!data.aspirations) data.aspirations = [];
+        
+        // If no aspirations exist, add as first one
+        if (data.aspirations.length === 0) {
+            return this.addAspiration(aspirationData);
+        }
+        
+        // Otherwise update the first aspiration
+        const firstAsp = data.aspirations[0];
+        return this.updateAspiration(firstAsp.id, aspirationData);
+    },
+
+    // Backward compatibility - get first aspiration
+    getAspiration() {
+        const aspirations = this.getAspirations();
+        if (aspirations.length > 0) {
+            return aspirations[0];
+        }
+        return {
+            styles: [],
+            colors: [],
+            keywords: []
+        };
+    },
+
+    // Style insights methods
+    cacheStyleInsights(aspirationId, insights) {
+        const data = this.getData();
+        if (!data.styleInsights) data.styleInsights = {};
+        
+        data.styleInsights[aspirationId] = {
+            ...insights,
+            cachedAt: Date.now()
+        };
+        this.saveData(data);
+    },
+
+    getStyleInsights(aspirationId) {
+        const data = this.getData();
+        if (!data.styleInsights) return null;
+        return data.styleInsights[aspirationId] || null;
+    },
+
+    needsStyleInsightsRefresh(aspirationId, maxAge = 7 * 24 * 60 * 60 * 1000) {
+        const insights = this.getStyleInsights(aspirationId);
+        if (!insights || !insights.cachedAt) return true;
+        
+        const age = Date.now() - insights.cachedAt;
+        return age > maxAge;
+    },
+
+    // Wardrobe item analysis methods
+    updateItemAnalysis(itemId, aspirationId, analysis) {
+        const data = this.getData();
+        const item = data.wardrobe.items.find(i => i.id === itemId);
+        
+        if (item) {
+            if (!item.analysisResults) item.analysisResults = {};
+            item.analysisResults[aspirationId] = {
+                ...analysis,
+                analyzedAt: Date.now()
+            };
+            this.saveData(data);
+            return true;
+        }
+        return false;
+    },
+
+    getItemAnalysis(itemId, aspirationId) {
+        const item = this.getWardrobeItemById(itemId);
+        if (!item || !item.analysisResults) return null;
+        return item.analysisResults[aspirationId] || null;
+    },
+
+    getMatchingItems(aspirationId, minScore = 0.5) {
+        const items = this.getWardrobeItems();
+        return items.filter(item => {
+            const analysis = item.analysisResults?.[aspirationId];
+            return analysis && analysis.matchScore >= minScore;
+        });
     },
 
     // User methods

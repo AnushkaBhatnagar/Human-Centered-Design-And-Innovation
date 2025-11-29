@@ -2,6 +2,39 @@
 const ClaudeAI = {
     API_URL: '/api/aspire-loop-ai',
 
+    // Analyze and enhance aspiration data
+    async analyzeAspiration(description, styles, colors, keywords) {
+        const prompt = `USER ASPIRATION DESCRIPTION:
+"${description || 'No specific description provided'}"
+
+USER SELECTIONS:
+Styles: ${styles.join(', ') || 'none'}
+Colors: ${colors.join(', ') || 'none'}
+Keywords: ${keywords.join(', ') || 'none'}
+
+TASK: Analyze this aspiration and create an enhanced, professional version.
+
+Generate a compelling aspiration profile. Output ONLY valid JSON, no other text or explanation.
+
+{
+  "name": "2-4 word compelling aspiration name that captures the essence of the description (e.g., 'Modern Minimalist Professional', 'Bold Creative Explorer')",
+  "enhancedKeywords": ["original keywords + 2-3 AI-suggested related terms based on the description"],
+  "styleInsight": "1-2 sentence description of what this aspiration represents, incorporating the user's description",
+  "colorHarmony": "brief comment on the color choices (e.g., 'Neutral palette with warm accents')",
+  "confidence": "high|medium|low - how well-defined this aspiration is"
+}
+
+Be creative but stay true to the user's intent and description. Make the name and insights align with their aspirational description.`;
+
+        try {
+            const response = await this.callAPI(prompt, 'You are a professional style consultant AI. Analyze user aspirations and enhance them with expert insights. Always respond with valid JSON only.');
+            return JSON.parse(this.cleanJSON(response));
+        } catch (error) {
+            console.error('Error analyzing aspiration:', error);
+            throw error;
+        }
+    },
+
     // Analyze identity from inspiration images and keywords
     async analyzeIdentity(images, keywords) {
         const prompt = `KEYWORDS: ${keywords.join(', ')}
@@ -231,6 +264,48 @@ Create outfit with 3-5 items. Output ONLY valid JSON, no other text.
             return outfit;
         } catch (error) {
             console.error('Error generating outfit:', error);
+            throw error;
+        }
+    },
+
+    // Analyze how well a wardrobe item matches an aspiration
+    async analyzeItemAspirationMatch(item, aspiration) {
+        const prompt = `WARDROBE ITEM:
+Name: ${item.name}
+Category: ${item.category}
+Color: ${item.color}
+Style: ${item.style || 'not specified'}
+Formality: ${item.formality}
+
+ASPIRATION:
+Name: ${aspiration.name}
+Styles: ${aspiration.styles?.join(', ') || 'none'}
+Colors: ${aspiration.colors?.join(', ') || 'none'}
+Keywords: ${aspiration.keywords?.join(', ') || 'none'}
+
+TASK: Analyze how well this item aligns with the aspiration. Consider style compatibility, color harmony, and keyword resonance.
+
+Output ONLY valid JSON, no other text:
+
+{
+  "matchScore": 0.75,
+  "reasoning": "brief explanation of why this item matches or doesn't match",
+  "styleAlignment": "high|medium|low",
+  "colorAlignment": "high|medium|low",
+  "recommendations": "optional styling tip or suggestion"
+}
+
+Match score should be 0.0 to 1.0 where:
+- 0.8-1.0 = Excellent match
+- 0.6-0.79 = Good match
+- 0.4-0.59 = Moderate match
+- 0.0-0.39 = Poor match`;
+
+        try {
+            const response = await this.callAPI(prompt, 'You are a JSON-only API for wardrobe analysis. Respond with valid JSON only, no markdown, no explanations.');
+            return JSON.parse(this.cleanJSON(response));
+        } catch (error) {
+            console.error('Error analyzing item match:', error);
             throw error;
         }
     },

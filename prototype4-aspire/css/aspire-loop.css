@@ -613,3 +613,99 @@ p {
         padding: var(--spacing-md);
     }
 }
+
+/* Aspiration Page Styles */
+.style-card {
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 3px solid transparent;
+}
+
+.style-card.selected {
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 0 1px var(--accent-primary);
+}
+
+.style-card-image {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+}
+
+.style-card-label {
+    text-align: center;
+    padding: 12px;
+    background: var(--bg-tertiary);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.style-card:hover .style-card-label {
+    background: var(--bg-elevated);
+}
+
+/* Color Grid */
+.color-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
+
+.color-chip {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 12px;
+    background: var(--bg-secondary);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 2px solid transparent;
+}
+
+.color-chip:hover {
+    background: var(--bg-tertiary);
+}
+
+.color-chip.selected {
+    border-color: var(--accent-primary);
+    background: var(--bg-tertiary);
+}
+
+.color-swatch {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.color-name {
+    font-size: 12px;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.color-chip.selected .color-name {
+    color: var(--accent-primary);
+    font-weight: 600;
+}
+
+/* Keyword chip styling additions */
+.chip-remove {
+    margin-left: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 16px;
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+}
+
+.chip.active .chip-remove:hover {
+    opacity: 1;
+}
