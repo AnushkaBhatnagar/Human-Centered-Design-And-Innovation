@@ -1,7 +1,7 @@
 // Outfit Generation Engine
 const OutfitGenerator = {
     // Generate AI outfit
-    async generateOutfit(occasion = 'everyday') {
+    async generateOutfit(occasion = 'everyday', aspirationId = null) {
         const identity = Storage.getIdentity();
         const wardrobe = Storage.getWardrobeItems();
 
@@ -20,7 +20,8 @@ const OutfitGenerator = {
                 alignmentScore: outfit.alignmentScore,
                 reason: outfit.reason,
                 stylingTips: outfit.stylingTips,
-                occasion: occasion
+                occasion: occasion,
+                aspirationId: aspirationId
             });
 
             ClaudeAI.hideLoading(loading);

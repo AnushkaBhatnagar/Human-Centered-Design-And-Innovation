@@ -175,6 +175,10 @@ const App = {
         
         return `
             <div class="fade-in">
+                <button class="btn btn-ghost mb-md" onclick="App.navigate('onboarding')" style="padding: 8px;">
+                    ← Back
+                </button>
+                
                 <h2 class="mb-md">Define Your Aspiration</h2>
                 <p class="mb-xl">How do you want to dress? Select the styles, colors, and keywords that resonate with you</p>
 
@@ -597,6 +601,10 @@ const App = {
     renderTellMeAboutYou() {
         return `
             <div class="fade-in">
+                <button class="btn btn-ghost mb-md" onclick="App.backFromTellMeAboutYou()" style="padding: 8px;">
+                    ← Back
+                </button>
+                
                 <h2 class="mb-md">Tell Me About Yourself</h2>
                 <p class="mb-xl">Upload photos of yourself to help us understand your current style</p>
 
@@ -691,6 +699,12 @@ const App = {
         if (this.selectedImages.length === 0) {
             document.getElementById('analyzePhotosBtn').style.display = 'none';
         }
+    },
+
+    backFromTellMeAboutYou() {
+        // Go back to identity-create page
+        // The selections are preserved in the App object
+        this.navigate('identity-create');
     },
 
     async analyzeCurrentStyle() {
@@ -822,9 +836,17 @@ const App = {
         return `
             <div class="fade-in">
                 <h2 class="mb-sm">Hello, ${user.name}</h2>
-                <p class="mb-md" style="color: var(--text-secondary);">
-                    ${identity.archetype.name}
-                </p>
+                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 16px;">
+                    <p class="mb-0" style="color: var(--text-secondary); flex: 1;">
+                        ${identity.archetype.name}
+                    </p>
+                    <button class="btn btn-ghost" onclick="App.editArchetype()" style="padding: 6px 8px; font-size: 12px;" title="Edit archetype">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 14px; height: 14px;">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                        </svg>
+                    </button>
+                </div>
 
                 <!-- Quick Actions - Streamlined -->
                 <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 24px;">
@@ -1323,13 +1345,78 @@ const App = {
         this.navigate('edit-aspiration');
     },
 
-    async generateOutfit() {
+    showOutfitGenerationDialog() {
+        const aspirations = Storage.getAspirations();
+        const wardrobe = Storage.getWardrobeItems();
+        
+        if (wardrobe.length < 3) {
+            alert('Add at least 3 items to your wardrobe to generate outfits');
+            return;
+        }
+        
+        // Create dialog overlay
+        const dialog = document.createElement('div');
+        dialog.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 20px;';
+        
+        dialog.innerHTML = `
+            <div class="card" style="max-width: 400px; width: 100%; max-height: 80vh; overflow-y: auto;">
+                <h3 class="mb-md">Generate Outfit</h3>
+                <p class="mb-lg" style="color: var(--text-secondary); font-size: 14px;">
+                    Select an aspiration to generate an outfit for, or choose "All Aspirations" for a general outfit.
+                </p>
+                
+                <div class="form-group">
+                    <label class="form-label">Select Aspiration</label>
+                    <select id="dialogAspirationSelector" class="form-input">
+                        <option value="">All Aspirations</option>
+                        ${aspirations.map(asp => `
+                            <option value="${asp.id}">${asp.name}</option>
+                        `).join('')}
+                    </select>
+                </div>
+                
+                <div class="flex gap-md mt-lg">
+                    <button class="btn btn-ghost" onclick="this.closest('div[style*=fixed]').remove()" style="flex: 1;">
+                        Cancel
+                    </button>
+                    <button class="btn btn-primary" id="generateOutfitBtn" style="flex: 1;">
+                        Generate
+                    </button>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(dialog);
+        
+        // Setup generate button
+        document.getElementById('generateOutfitBtn').onclick = async () => {
+            const selector = document.getElementById('dialogAspirationSelector');
+            const aspirationId = selector.value || null;
+            dialog.remove();
+            await this.generateOutfitWithAspiration(aspirationId);
+        };
+        
+        // Close on background click
+        dialog.addEventListener('click', (e) => {
+            if (e.target === dialog) {
+                dialog.remove();
+            }
+        });
+    },
+    
+    async generateOutfitWithAspiration(aspirationId) {
         try {
-            await OutfitGenerator.generateOutfit();
-            alert('Outfit created! Check your wardrobe.');
+            await OutfitGenerator.generateOutfit('everyday', aspirationId);
+            // Navigate to outfits page to show the new outfit
+            this.navigate('outfits');
         } catch (error) {
             alert(error.message);
         }
+    },
+    
+    async generateOutfit() {
+        // Legacy function - redirect to dialog
+        this.showOutfitGenerationDialog();
     },
 
     // DAILY LOG PAGE
@@ -1837,10 +1924,7 @@ const App = {
 
     // Render calendar view of logging activity
     renderCalendar(allLogs) {
-        if (allLogs.length === 0) {
-            return '';
-        }
-
+        // Always show calendar, even with no logs
         // Get current date and calculate calendar range (last 30 days)
         const today = new Date();
         const startDate = new Date(today);
@@ -2197,6 +2281,76 @@ const App = {
         }
     },
 
+    // Edit archetype
+    editArchetype() {
+        const identity = Storage.getIdentity();
+        const currentArchetype = identity.archetype?.name || '';
+        
+        // Create dialog overlay
+        const dialog = document.createElement('div');
+        dialog.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 20px;';
+        
+        dialog.innerHTML = `
+            <div class="card" style="max-width: 400px; width: 100%; max-height: 80vh; overflow-y: auto;">
+                <h3 class="mb-md">Edit Your Archetype</h3>
+                <p class="mb-lg" style="color: var(--text-secondary); font-size: 14px;">
+                    This is your personal style identity shown on your dashboard.
+                </p>
+                
+                <div class="form-group">
+                    <label class="form-label">Archetype Name</label>
+                    <input type="text" id="archetypeNameInput" class="form-input" 
+                           value="${currentArchetype}" 
+                           placeholder="e.g., Creative Professional, Urban Minimalist" />
+                    <p style="font-size: 12px; color: var(--text-tertiary); margin-top: 8px;">
+                        A few words that capture your style identity
+                    </p>
+                </div>
+                
+                <div class="flex gap-md mt-lg">
+                    <button class="btn btn-ghost" onclick="this.closest('div[style*=fixed]').remove()" style="flex: 1;">
+                        Cancel
+                    </button>
+                    <button class="btn btn-primary" id="saveArchetypeBtn" style="flex: 1;">
+                        Save
+                    </button>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(dialog);
+        
+        // Setup save button
+        document.getElementById('saveArchetypeBtn').onclick = () => {
+            const input = document.getElementById('archetypeNameInput');
+            const newName = input.value.trim();
+            
+            if (newName) {
+                Storage.updateArchetype(newName);
+                dialog.remove();
+                this.render(); // Refresh to show new archetype
+            } else {
+                alert('Please enter an archetype name');
+            }
+        };
+        
+        // Close on background click
+        dialog.addEventListener('click', (e) => {
+            if (e.target === dialog) {
+                dialog.remove();
+            }
+        });
+        
+        // Focus input
+        setTimeout(() => {
+            const input = document.getElementById('archetypeNameInput');
+            if (input) {
+                input.focus();
+                input.select();
+            }
+        }, 100);
+    },
+
     // ADD WARDROBE ITEM PAGE
     renderAddWardrobeItem() {
         return `
@@ -2534,12 +2688,13 @@ const App = {
     renderOutfits() {
         const outfits = Storage.getOutfits();
         const wardrobe = Storage.getWardrobeItems();
+        const aspirations = Storage.getAspirations();
 
         return `
             <div class="fade-in">
                 <div class="flex justify-between items-center mb-lg">
                     <h2>Your Outfits</h2>
-                    <button class="btn btn-primary" onclick="App.generateOutfit()">
+                    <button class="btn btn-primary" onclick="App.showOutfitGenerationDialog()">
                         + Generate
                     </button>
                 </div>
@@ -2551,11 +2706,23 @@ const App = {
                 ${outfits.length > 0 ? `
                     ${outfits.map(outfit => {
                         const items = outfit.itemIds?.map(id => wardrobe.find(w => w.id === id)).filter(i => i) || [];
+                        const aspiration = outfit.aspirationId ? aspirations.find(a => a.id === outfit.aspirationId) : null;
                         return `
                             <div class="card mb-md">
-                                <div class="flex justify-between items-center mb-md">
-                                    <h4>${outfit.name}</h4>
-                                    <div class="badge badge-gold">${outfit.alignmentScore}%</div>
+                                <div class="flex justify-between items-start mb-md">
+                                    <div style="flex: 1;">
+                                        <h4 style="margin-bottom: 8px;">${outfit.name}</h4>
+                                        ${aspiration ? `
+                                            <div style="font-size: 13px; color: var(--text-secondary); display: flex; align-items: center; gap: 6px;">
+                                                <span style="color: var(--accent-primary);">✨</span>
+                                                <span>For: ${aspiration.name}</span>
+                                            </div>
+                                        ` : ''}
+                                    </div>
+                                    <div style="text-align: right;">
+                                        <div class="badge badge-gold" style="font-size: 16px; padding: 8px 12px;">${outfit.alignmentScore}%</div>
+                                        <div style="font-size: 11px; color: var(--text-tertiary); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px;">Style Match</div>
+                                    </div>
                                 </div>
                                 
                                 ${items.length > 0 ? `

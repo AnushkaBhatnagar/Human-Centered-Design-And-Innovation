@@ -257,6 +257,15 @@ const Storage = {
         this.saveData(data);
     },
 
+    updateArchetype(name) {
+        const data = this.getData();
+        if (!data.identity.archetype) {
+            data.identity.archetype = {};
+        }
+        data.identity.archetype.name = name;
+        this.saveData(data);
+    },
+
     getIdentity() {
         return this.getData().identity;
     },
