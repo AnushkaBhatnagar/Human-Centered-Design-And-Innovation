@@ -1,6 +1,6 @@
-# HCDI Prototypes - Fashion and Style Applications
+# HCDI Prototypes - Fashion and Style AI Applications
 
-A collection of prototypes exploring human-centered design solutions for the problem: "A Closet Full of Clothes and Nothing to Wear."
+A collection of AI prototypes exploring human-centered design solutions for the problem: "A Closet Full of Clothes and Nothing to Wear."
 
 Created as part of the Human-Centered Design and Innovation (HCDI) course at Columbia University, Fall 2025.
 
